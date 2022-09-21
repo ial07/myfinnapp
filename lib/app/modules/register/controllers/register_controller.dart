@@ -28,6 +28,22 @@ class RegisterController extends GetxController {
     );
   }
 
+  void snackBarSuccess(String success) {
+    Get.snackbar(
+      "Success",
+      "$success",
+      icon: Icon(Icons.check, color: Colors.white),
+      backgroundColor: Colors.green,
+      borderRadius: 20,
+      margin: EdgeInsets.all(15),
+      colorText: Colors.white,
+      duration: Duration(seconds: 3),
+      isDismissible: true,
+      dismissDirection: DismissDirection.horizontal,
+      forwardAnimationCurve: Curves.easeOutBack,
+    );
+  }
+
   TextEditingController emailC = TextEditingController();
   TextEditingController passC = TextEditingController();
   TextEditingController nameC = TextEditingController();
@@ -52,11 +68,10 @@ class RegisterController extends GetxController {
               registerModelToJson(registerModel), "register");
 
           var data = json.decode(response);
-
+          print(data);
           if (data["data"]["token"] != null) {
-            await NetworkHandler.storeToken(data["data"]["token"]);
             Get.offAllNamed(Routes.LOGIN);
-            snackBarError(
+            snackBarSuccess(
                 "Your is registered, please verified your account first");
           } else {
             isLoading.value = false;

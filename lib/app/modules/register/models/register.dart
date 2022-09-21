@@ -9,17 +9,17 @@ String registerModelToJson(RegisterModel data) => json.encode(data.toJson());
 
 class RegisterModel {
   RegisterModel({
-    required this.username,
-    required this.email,
+    this.username,
+    this.email,
     this.telephone,
     this.photo,
-    required this.password,
+    this.password,
   });
 
   String username;
   String password;
-  String? telephone;
-  String? photo;
+  String telephone;
+  String photo;
   String email;
 
   factory RegisterModel.fromJson(Map<String, dynamic> json) => RegisterModel(

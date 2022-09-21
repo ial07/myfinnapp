@@ -11,9 +11,9 @@ class BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ConvexAppBar(
       style: TabStyle.fixedCircle,
-      color: Colors.black,
+      color: Colors.blue[600],
       backgroundColor: Colors.white,
-      activeColor: Colors.orange[300],
+      activeColor: Colors.blue[300],
       height: MediaQuery.of(context).size.height * 0.07,
 
       items: [

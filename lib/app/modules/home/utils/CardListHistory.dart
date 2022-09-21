@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../utils/color.dart' as color;
 
 class CardListHistory extends StatelessWidget {
   final String Title;
@@ -9,10 +10,10 @@ class CardListHistory extends StatelessWidget {
   final String Date;
 
   CardListHistory({
-    required this.Title,
-    required this.SubTitle,
-    required this.Price,
-    required this.Date,
+    this.Title,
+    this.SubTitle,
+    this.Price,
+    this.Date,
   });
 
   @override
@@ -42,7 +43,7 @@ class CardListHistory extends StatelessWidget {
                   Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
+                        color: color.AppColor.foreGroundColor,
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(

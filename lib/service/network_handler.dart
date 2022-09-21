@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_storage/get_storage.dart';
 
 class NetworkHandler {
   static final client = http.Client();
@@ -11,11 +12,34 @@ class NetworkHandler {
     return response.body;
   }
 
-  static Future<dynamic> get(String endpoint, String? token) async {
-    print(token);
-    var response = await client.get(buildUrl(endpoint), headers: {
+  static Future<dynamic> get(String endpoint) async {
+    var Token = await NetworkHandler.getToken();
+    if (Token != null) {
+      var response = await client.get(buildUrl(endpoint), headers: {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $Token"
+      });
+      return response.body;
+    }
+  }
+
+  static Future<dynamic> getById(String endpoint, String Id) async {
+    var Token = await NetworkHandler.getToken();
+    if (Token != null) {
+      var response = await client.get(buildUrl("$endpoint/$Id"), headers: {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $Token"
+      });
+      return response.body;
+    }
+  }
+
+  static Future<String> post(var body, String endpoint) async {
+    var Token = await NetworkHandler.getToken();
+
+    var response = await client.post(buildUrl(endpoint), body: body, headers: {
       "Content-type": "application/json",
-      "Authorization": "$token"
+      "Authorization": "Bearer $Token"
     });
     return response.body;
   }
@@ -26,11 +50,19 @@ class NetworkHandler {
     return Uri.parse(apiPath);
   }
 
-  static Future<void> storeToken(String token) async {
-    await storage.write(key: "token", value: "Bearer " + token);
+  // static Future<void> storeToken(String token) async {
+  //   final box = GetStorage();
+  //   box.write("token", "Bearer " + token);
+  // }
+
+  static Future<void> storeData(Map<String, dynamic> data) async {
+    final box = GetStorage();
+    await box.write("dataUser", data);
   }
 
-  static Future<String?> getToken() async {
-    return await storage.read(key: "token");
+  static Future<String> getToken() async {
+    final dataUser = GetStorage();
+    Map<String, dynamic> data = dataUser.read("dataUser");
+    return await data['token'];
   }
 }

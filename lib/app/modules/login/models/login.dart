@@ -9,8 +9,8 @@ String loginModelToJson(LoginModel data) => json.encode(data.toJson());
 
 class LoginModel {
   LoginModel({
-    required this.username,
-    required this.password,
+    this.username,
+    this.password,
   });
 
   String username;
