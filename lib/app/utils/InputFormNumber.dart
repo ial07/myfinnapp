@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class InputForm extends StatelessWidget {
+class InputFormNumber extends StatelessWidget {
   final String Title;
   final String HintText;
   final TextEditingController Controller;
 
-  const InputForm({
+  const InputFormNumber({
     this.Title,
     this.HintText,
     this.Controller,
@@ -24,6 +24,7 @@ class InputForm extends StatelessWidget {
         TextFormField(
           controller: Controller,
           autocorrect: false,
+          keyboardType: TextInputType.number,
           decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.transparent),

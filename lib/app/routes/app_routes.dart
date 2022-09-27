@@ -8,6 +8,7 @@ abstract class Routes {
   static const REGISTER = _Paths.REGISTER;
   static const START_PAGE = _Paths.START_PAGE;
   static const CREATE_BANK_ACCOUNT = _Paths.CREATE_BANK_ACCOUNT;
+  static const CREATE_TRX = _Paths.CREATE_TRX;
 }
 
 abstract class _Paths {
@@ -17,4 +18,5 @@ abstract class _Paths {
   static const REGISTER = '/register';
   static const START_PAGE = '/start-page';
   static const CREATE_BANK_ACCOUNT = '/create-bank-account';
+  static const CREATE_TRX = '/create-trx';
 }

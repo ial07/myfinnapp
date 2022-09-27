@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:myfinnapp/app/utils/SvgIcon.dart';
 
 class CardBank extends StatelessWidget {
   final String NamaBank;
@@ -9,6 +11,8 @@ class CardBank extends StatelessWidget {
   final String Note;
   final int Color1;
   final int Color2;
+  final bool isDebit;
+  final DateTime ExpectedDate;
 
   CardBank({
     this.NamaBank,
@@ -17,14 +21,18 @@ class CardBank extends StatelessWidget {
     this.Note,
     this.Color1,
     this.Color2,
+    this.isDebit,
+    this.ExpectedDate,
   });
 
   @override
   Widget build(BuildContext context) {
+    var f = NumberFormat("#,##0.00", "en_US");
+
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.82,
+        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -51,36 +59,121 @@ class CardBank extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("$NamaBank",
-                      style: GoogleFonts.amiri(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white)),
-                  Text("Rp $Amount",
-                      style: GoogleFonts.montserrat(
-                          fontSize: 14, color: Colors.white)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("$NamaBank",
+                          style: GoogleFonts.amiri(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
+                      isDebit ? SvgIcon.creditSVG : SvgIcon.debitSVG
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      isDebit != true
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Amount",
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 13, color: Colors.white)),
+                                Text("Rp ${f.format(int.parse(Amount))}",
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 13,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Current Amount",
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 10, color: Colors.white)),
+                                Text("Rp ${f.format(int.parse(Amount))}",
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                      isDebit == true
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text("Expected Amount",
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 10, color: Colors.white)),
+                                Text("Rp.13,000,000",
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            )
+                          : Text(""),
+                    ],
+                  ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("$Type",
-                      style: GoogleFonts.montserrat(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white)),
-                ],
-              ),
+              isDebit == true
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(""),
+                        Text(""),
+                        Column(
+                          children: [
+                            Text("estimated savings per month",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 7, color: Colors.white)),
+                            Text("Rp.13,000,000",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 7,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text("Until",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 7, color: Colors.white)),
+                            Text(
+                                "${DateFormat("dd-MMM-yyyy").format(ExpectedDate)}",
+                                style: GoogleFonts.montserrat(
+                                    fontSize: 7,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          ],
+                        )
+                      ],
+                    )
+                  : Text(""),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("$Note",
-                      style: GoogleFonts.montserrat(
-                          fontSize: 12, color: Colors.white)),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("$Type",
+                          style: GoogleFonts.montserrat(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white)),
+                      Text("$Note",
+                          style: GoogleFonts.montserrat(
+                              fontSize: 7, color: Colors.white)),
+                    ],
+                  ),
                   Container(
                       padding: EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(5),
                         boxShadow: [
                           BoxShadow(
@@ -89,7 +182,7 @@ class CardBank extends StatelessWidget {
                               color: Colors.black.withOpacity(0.3))
                         ],
                       ),
-                      child: Icon(Icons.line_axis, size: 22)),
+                      child: Icon(Icons.list_alt_outlined, size: 22)),
                 ],
               )
             ],

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,12 +10,13 @@ import 'package:myfinnapp/app/modules/create_bank_account/models/getBank.dart';
 import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/app/utils/Iconback.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:myfinnapp/app/utils/InputForm.dart';
+import 'package:myfinnapp/app/utils/InputFormNumber.dart';
 import '../controllers/create_bank_account_controller.dart';
 
 import '../../../utils/color.dart' as color;
 
 class CreateBankAccountView extends GetView<CreateBankAccountController> {
-  var _result;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -25,7 +27,8 @@ class CreateBankAccountView extends GetView<CreateBankAccountController> {
           padding: EdgeInsets.only(
               top: size.height * 0.07,
               left: size.width * 0.1,
-              right: size.width * 0.1),
+              right: size.width * 0.1,
+              bottom: size.height * 0.05),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -51,19 +54,22 @@ class CreateBankAccountView extends GetView<CreateBankAccountController> {
                     child: TextFormField(
                       controller: controller.accountNameC,
                       autocorrect: false,
+                      maxLength: 35,
                       decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(9),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.transparent),
-                          borderRadius: BorderRadius.circular(9),
-                        ),
-                        hintText: "Type here",
-                        filled: true,
-                        fillColor: Colors.blue[50],
-                      ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(9),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.transparent),
+                            borderRadius: BorderRadius.circular(9),
+                          ),
+                          hintText: "Type here",
+                          filled: true,
+                          fillColor: Colors.blue[50],
+                          helperStyle:
+                              GoogleFonts.montserrat(color: Colors.blue[100])),
+                      style: GoogleFonts.montserrat(),
                     ),
                   ),
                   Obx(
@@ -90,8 +96,20 @@ class CreateBankAccountView extends GetView<CreateBankAccountController> {
                   )
                 ],
               ),
+              Text("Only add if your account does not exist",
+                  style:
+                      GoogleFonts.montserrat(fontSize: 8, color: Colors.red)),
+              Container(
+                height: 3,
+                width: size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey.withOpacity(0.2), //color of border
+                    width: 2, //width of border
+                  ),
+                ),
+              ),
               SizedBox(height: 35),
-
               // Dropdown Account
               Obx(() => controller.getAccountList.isNotEmpty
                   ? DropdownSearch<Datum>(
@@ -128,6 +146,17 @@ class CreateBankAccountView extends GetView<CreateBankAccountController> {
               SizedBox(height: 15),
 
               /// Get Bank Dropdown
+              Row(
+                children: [
+                  Text(
+                    "if your bank account not registered in list, please select",
+                    style: GoogleFonts.montserrat(fontSize: 6),
+                  ),
+                  Text(" MY FINN BANK",
+                      style: GoogleFonts.montserrat(
+                          fontSize: 6, fontWeight: FontWeight.bold))
+                ],
+              ),
               Obx(() => controller.getBankList.isNotEmpty
                   ? DropdownSearch<BankData>(
                       showSearchBox: true,
@@ -143,6 +172,7 @@ class CreateBankAccountView extends GetView<CreateBankAccountController> {
                       popupItemBuilder: (context, item, isSelected) => ListTile(
                         title: Text(item.name),
                       ),
+                      dropdownSearchBaseStyle: GoogleFonts.montserrat(),
                       onFind: (text) async {
                         var res = await controller.getBankList;
                         if (res.length > 0) {
@@ -170,66 +200,90 @@ class CreateBankAccountView extends GetView<CreateBankAccountController> {
                       children: [
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                primary: controller.isDebit.value == true
-                                    ? Colors.blue[600]
-                                    : Colors.white),
-                            onPressed: () {
-                              controller.isDebit.value = true;
-                            },
-                            child: Text("DEBIT",
-                                style: GoogleFonts.montserrat(
-                                    color: controller.isDebit.value == true
-                                        ? Colors.white
-                                        : Colors.blue[600]))),
-                        SizedBox(width: 20),
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
                                 primary: controller.isDebit.value == false
                                     ? Colors.blue[600]
                                     : Colors.white),
                             onPressed: () {
                               controller.isDebit.value = false;
+                              controller.AmountC.text = "";
+                              controller.dateC.text = "";
                             },
                             child: Text("CREDIT",
                                 style: GoogleFonts.montserrat(
                                     color: controller.isDebit.value == false
                                         ? Colors.white
-                                        : Colors.blue[600]))),
+                                        : Colors.grey[400]))),
+                        SizedBox(width: 20),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                primary: controller.isDebit.value == true
+                                    ? Colors.blue[600]
+                                    : Colors.white),
+                            onPressed: () {
+                              controller.isDebit.value = true;
+                              controller.AmountC.text = "";
+                            },
+                            child: Text("DEBIT",
+                                style: GoogleFonts.montserrat(
+                                    color: controller.isDebit.value == true
+                                        ? Colors.white
+                                        : Colors.grey[400]))),
                       ],
                     ),
                   )),
+              SizedBox(height: 20),
 
-              Obx(() => controller.isDebit.isTrue
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Tanggal Akhir Berlaku",
-                            style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.bold)),
-                        SizedBox(height: 5),
-                        TextFormField(
-                          // controller: controller.passwordC,
-                          autocorrect: false,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.transparent),
-                              borderRadius: BorderRadius.circular(9),
+              Obx(
+                () => controller.isDebit.isTrue
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InputFormNumber(
+                              Title: "Expected Amount",
+                              HintText: "Type expected amount",
+                              Controller: controller.AmountC),
+                          Text("Expected date",
+                              style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.bold)),
+                          SizedBox(height: 5),
+                          TextField(
+                            controller: controller.dateC,
+                            autocorrect: false,
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.transparent),
+                                borderRadius: BorderRadius.circular(9),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.transparent),
+                                borderRadius: BorderRadius.circular(9),
+                              ),
+                              hintText: "Select date",
+                              filled: true,
+                              icon: Icon(Icons.calendar_today_outlined),
+                              fillColor: Colors.blue[50],
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.transparent),
-                              borderRadius: BorderRadius.circular(9),
-                            ),
-                            hintText: "Enter password",
-                            filled: true,
-                            fillColor: Colors.blue[50],
+                            style: GoogleFonts.montserrat(),
+                            onTap: () {
+                              controller.chooseDate();
+                            },
                           ),
-                        )
-                      ],
-                    )
-                  : Text("")),
+                        ],
+                      )
+                    : InputFormNumber(
+                        Title: "Amount",
+                        HintText: "Type amount",
+                        Controller: controller.AmountC),
+              ),
+              SizedBox(height: 15),
+              InputForm(
+                  Title: "Notes",
+                  HintText: "Enter notes",
+                  Controller: controller.NotesC),
 
-              SizedBox(height: 30),
+              SizedBox(height: 25),
 
               ///Button
               Obx(() => SizedBox(
@@ -237,7 +291,7 @@ class CreateBankAccountView extends GetView<CreateBankAccountController> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (controller.isLoading.isFalse) {
-                          // await controller.login();
+                          await controller.SubmitBank();
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -248,7 +302,7 @@ class CreateBankAccountView extends GetView<CreateBankAccountController> {
                               side: BorderSide(
                                   color: Color.fromRGBO(0, 160, 227, 1)))),
                       child: Text(
-                        controller.isLoading.isFalse ? "LOGIN" : "LOADING...",
+                        controller.isLoading.isFalse ? "SUBMIT" : "LOADING...",
                         style:
                             GoogleFonts.montserrat(fontWeight: FontWeight.bold),
                       ),

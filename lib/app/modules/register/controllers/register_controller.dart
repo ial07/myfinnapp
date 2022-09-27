@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfinnapp/app/function/SnackbarFunction.dart';
 import 'package:myfinnapp/app/modules/register/models/register.dart';
 import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/service/network_handler.dart';
@@ -11,38 +12,6 @@ class RegisterController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isVisible = false.obs;
   RxBool isConfirmVisible = false.obs;
-
-  void snackBarError(String error) {
-    Get.snackbar(
-      "Error",
-      "$error",
-      icon: Icon(Icons.error, color: Colors.white),
-      backgroundColor: Colors.red,
-      borderRadius: 20,
-      margin: EdgeInsets.all(15),
-      colorText: Colors.white,
-      duration: Duration(seconds: 3),
-      isDismissible: true,
-      dismissDirection: DismissDirection.horizontal,
-      forwardAnimationCurve: Curves.easeOutBack,
-    );
-  }
-
-  void snackBarSuccess(String success) {
-    Get.snackbar(
-      "Success",
-      "$success",
-      icon: Icon(Icons.check, color: Colors.white),
-      backgroundColor: Colors.green,
-      borderRadius: 20,
-      margin: EdgeInsets.all(15),
-      colorText: Colors.white,
-      duration: Duration(seconds: 3),
-      isDismissible: true,
-      dismissDirection: DismissDirection.horizontal,
-      forwardAnimationCurve: Curves.easeOutBack,
-    );
-  }
 
   TextEditingController emailC = TextEditingController();
   TextEditingController passC = TextEditingController();
@@ -71,24 +40,25 @@ class RegisterController extends GetxController {
           print(data);
           if (data["data"]["token"] != null) {
             Get.offAllNamed(Routes.LOGIN);
-            snackBarSuccess(
+            SnackbarFunction.snackBarSuccess(
                 "Your is registered, please verified your account first");
           } else {
             isLoading.value = false;
             var errors = data["data"]["errors"];
-            snackBarError("$errors");
+            SnackbarFunction.snackBarError("$errors");
           }
         } else {
           isLoading.value = false;
-          snackBarError("Confirm password must be the same as the password");
+          SnackbarFunction.snackBarError(
+              "Confirm password must be the same as the password");
         }
       } else {
         isLoading.value = false;
-        snackBarError("Please enter the correct email format");
+        SnackbarFunction.snackBarError("Please enter the correct email format");
       }
     } else {
       isLoading.value = false;
-      snackBarError("All fields must be filled");
+      SnackbarFunction.snackBarError("All fields must be filled");
     }
   }
 }

@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:myfinnapp/app/routes/app_pages.dart';
 
 class NetworkHandler {
   static final client = http.Client();
@@ -9,6 +13,7 @@ class NetworkHandler {
   static Future<String> auth(var body, String endpoint) async {
     var response = await client.post(buildUrl(endpoint),
         body: body, headers: {"Content-type": "application/json"});
+
     return response.body;
   }
 
@@ -16,17 +21,6 @@ class NetworkHandler {
     var Token = await NetworkHandler.getToken();
     if (Token != null) {
       var response = await client.get(buildUrl(endpoint), headers: {
-        "Content-type": "application/json",
-        "Authorization": "Bearer $Token"
-      });
-      return response.body;
-    }
-  }
-
-  static Future<dynamic> getById(String endpoint, String Id) async {
-    var Token = await NetworkHandler.getToken();
-    if (Token != null) {
-      var response = await client.get(buildUrl("$endpoint/$Id"), headers: {
         "Content-type": "application/json",
         "Authorization": "Bearer $Token"
       });

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myfinnapp/app/routes/app_pages.dart';
+import 'package:myfinnapp/app/utils/InputFormNumber.dart';
 
 import '../controllers/register_controller.dart';
 import '../../../utils/color.dart' as color;
@@ -46,28 +47,10 @@ class RegisterView extends GetView<RegisterController> {
                   HintText: "Enter username",
                   Controller: controller.nameC),
 
-              Text("No. HP",
-                  style: GoogleFonts.montserrat(fontWeight: FontWeight.bold)),
-              SizedBox(height: 5),
-              TextFormField(
-                controller: controller.nohpC,
-                autocorrect: false,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(9),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: BorderRadius.circular(9),
-                  ),
-                  hintText: "Enter No HP",
-                  filled: true,
-                  fillColor: Colors.blue[50],
-                ),
-              ),
-              SizedBox(height: 15),
+              InputFormNumber(
+                  Title: "No HP",
+                  HintText: "Enter No HP",
+                  Controller: controller.nohpC),
 
               Text("Password",
                   style: GoogleFonts.montserrat(fontWeight: FontWeight.bold)),

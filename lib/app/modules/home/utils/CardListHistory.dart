@@ -1,30 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:myfinnapp/app/utils/SvgIcon.dart';
 import '../../../utils/color.dart' as color;
 
 class CardListHistory extends StatelessWidget {
   final String Title;
   final String SubTitle;
   final String Price;
-  final String Date;
+  final DateTime Date;
+  final bool isDebit;
 
-  CardListHistory({
-    this.Title,
-    this.SubTitle,
-    this.Price,
-    this.Date,
-  });
+  CardListHistory(
+      {this.Title, this.SubTitle, this.Price, this.Date, this.isDebit});
 
   @override
   Widget build(BuildContext context) {
+    var f = NumberFormat("#,##0.00", "en_US");
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
         height: MediaQuery.of(context).size.height * 0.15,
         decoration: BoxDecoration(
-          color: Colors.grey.shade200,
+          color: Colors.blue[50],
           borderRadius: BorderRadius.circular(10),
           // boxShadow: [
           //   BoxShadow(
@@ -43,27 +43,28 @@ class CardListHistory extends StatelessWidget {
                   Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: color.AppColor.foreGroundColor,
+                        color: Colors.blue[300],
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
                               offset: Offset(2, 5),
                               blurRadius: 10,
-                              color: Colors.grey.withOpacity(0.3))
+                              color: Colors.blue.withOpacity(0.3))
                         ],
                       ),
-                      child: Icon(Icons.chat, size: 22)),
+                      child: isDebit ? SvgIcon.creditSVG : SvgIcon.debitSVG),
                   SizedBox(width: 15),
                   // Center Item
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text("$Title",
+                      Text(
+                          "${Title.split(" ")[0]} ${Title.split(" ").length > 1 ? "..." : ""}",
                           style: GoogleFonts.montserrat(
-                              fontSize: 14, fontWeight: FontWeight.bold)),
+                              fontSize: 12, fontWeight: FontWeight.bold)),
                       Text("$SubTitle",
-                          style: GoogleFonts.montserrat(fontSize: 11)),
+                          style: GoogleFonts.montserrat(fontSize: 8)),
                     ],
                   ),
                 ],
@@ -74,10 +75,11 @@ class CardListHistory extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text("Rp $Price",
+                  Text("Rp ${f.format(int.parse(Price))}",
                       style: GoogleFonts.montserrat(
-                          fontSize: 14, fontWeight: FontWeight.bold)),
-                  Text("$Date", style: GoogleFonts.montserrat(fontSize: 12)),
+                          fontSize: 11, fontWeight: FontWeight.bold)),
+                  Text("${DateFormat("dd-MMM-yyyy").format(Date)}",
+                      style: GoogleFonts.montserrat(fontSize: 8)),
                 ],
               )
             ],
