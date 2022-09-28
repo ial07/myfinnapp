@@ -18,6 +18,7 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final _controller = PageController();
 
     return Scaffold(
       backgroundColor: color.AppColor.PageBackground,
@@ -116,13 +117,20 @@ class HomeView extends GetView<HomeController> {
                           SizedBox(
                               child: Container(
                                 height: size.height * 0.25,
-                                child: ListView.builder(
+                                child: PageView.builder(
+                                    controller: _controller,
+                                    // onPageChanged: (val) =>
+                                    //     controller.getResponse(),
                                     scrollDirection: Axis.horizontal,
                                     itemCount: controller.getBankList.length,
                                     itemBuilder: (context, index) {
-                                      controller.getTransaction();
                                       controller.idBankAccount.value =
                                           controller.getBankList[index].id;
+                                      // controller.currentAmount.value =
+                                      //     controller.getBankList[index].amount -
+                                      //         controller.totalAmount.value;
+                                      // print(controller.currentAmount.value);
+                                      controller.getTransaction();
                                       var colors = controller
                                           .getBankList[index].bank.color;
                                       var colorresult;
@@ -150,6 +158,9 @@ class HomeView extends GetView<HomeController> {
                                             .getBankList[index].isDebit,
                                         ExpectedDate: controller
                                             .getBankList[index].expiredDate,
+                                        ControllerPage: _controller,
+                                        lenghtPage:
+                                            controller.getBankList.length,
                                       );
                                     }),
                               ),
@@ -170,23 +181,45 @@ class HomeView extends GetView<HomeController> {
             ),
 
             // / list Transaction
-            // Obx(() => controller.getTransactionsList.isNotEmpty
-            //     ? SliverList(
-            //         delegate: SliverChildBuilderDelegate((context, index) {
-            //         print(controller.getTransactionsList.length);
-            //         return CardListHistory(
-            //           Title: controller.getTransactionsList[index].bankAccount
-            //               .userAccount.accountName,
-            //           SubTitle: controller
-            //               .getTransactionsList[index].bankAccount.bank.name,
-            //           Price: controller.getTransactionsList[index].amount
-            //               .toString(),
-            //           Date: controller.getTransactionsList[index].createdDate,
-            //           isDebit: controller
-            //               .getTransactionsList[index].bankAccount.isDebit,
-            //         );
-            //       }, childCount: controller.getTransactionsList.length))
-            //     : Text(""))
+
+            Obx(() => controller.getTransactionsList.isNotEmpty
+                    ? SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                        controller.totalAmount.value = 0;
+                        controller.totalAmount.value +=
+                            controller.getTransactionsList[index].amount;
+
+                        return CardListHistory(
+                          // Title: "Notes",
+                          SubTitle: controller.getTransactionsList[index].notes,
+                          Price: controller.getTransactionsList[index].amount
+                              .toString(),
+                          Date:
+                              controller.getTransactionsList[index].createdDate,
+                          isDebit: controller
+                              .getTransactionsList[index].bankAccount.isDebit,
+                        );
+                      }, childCount: controller.getTransactionsList.length))
+                    : SliverList(
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 70),
+                          child: Center(
+                              child: Text("Transaction Not Found",
+                                  style: GoogleFonts.montserrat())),
+                        );
+                      }, childCount: 1))
+
+                //   () => controller.isLoading.isTrue
+                //       ? SliverList(
+                //           delegate: SliverChildBuilderDelegate((context, index) {
+                //           return Padding(
+                //             padding: const EdgeInsets.only(top: 70),
+                //             child: Center(child: CircularProgressIndicator()),
+                //           );
+                //         }, childCount: 1))
+                //       : ListTRX(controller: controller),
+                )
           ],
         ),
       ),
@@ -194,3 +227,46 @@ class HomeView extends GetView<HomeController> {
     );
   }
 }
+
+// class ListTRX extends StatefulWidget {
+//   const ListTRX({
+//     Key key,
+//     @required this.controller,
+//   }) : super(key: key);
+
+//   final HomeController controller;
+
+//   @override
+//   State<ListTRX> createState() => _ListTRXState();
+// }
+
+// class _ListTRXState extends State<ListTRX> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return widget.controller.getTransactionsList.isNotEmpty
+//         ? SliverList(
+//             delegate: SliverChildBuilderDelegate((context, index) {
+//             print(widget.controller.getTransactionsList[index].amount);
+//             return CardListHistory(
+//               Title: widget.controller.getTransactionsList[index].bankAccount
+//                   .userAccount.accountName,
+//               SubTitle: widget
+//                   .controller.getTransactionsList[index].bankAccount.bank.name,
+//               Price: widget.controller.getTransactionsList[index].amount
+//                   .toString(),
+//               Date: widget.controller.getTransactionsList[index].createdDate,
+//               isDebit: widget
+//                   .controller.getTransactionsList[index].bankAccount.isDebit,
+//             );
+//           }, childCount: widget.controller.getTransactionsList.length))
+//         : SliverList(
+//             delegate: SliverChildBuilderDelegate((context, index) {
+//             return Padding(
+//               padding: const EdgeInsets.only(top: 70),
+//               child: Center(
+//                   child: Text("Transaction Not Found",
+//                       style: GoogleFonts.montserrat())),
+//             );
+//           }, childCount: 1));
+//   }
+// }

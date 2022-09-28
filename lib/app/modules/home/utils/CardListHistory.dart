@@ -41,9 +41,9 @@ class CardListHistory extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(5),
                       decoration: BoxDecoration(
-                        color: Colors.blue[300],
+                        color: Colors.blue[50],
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
@@ -52,19 +52,25 @@ class CardListHistory extends StatelessWidget {
                               color: Colors.blue.withOpacity(0.3))
                         ],
                       ),
-                      child: isDebit ? SvgIcon.creditSVG : SvgIcon.debitSVG),
+                      child: Icon(
+                        Icons.monetization_on_outlined,
+                        color: Colors.black54,
+                      )),
                   SizedBox(width: 15),
                   // Center Item
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text(
-                          "${Title.split(" ")[0]} ${Title.split(" ").length > 1 ? "..." : ""}",
-                          style: GoogleFonts.montserrat(
-                              fontSize: 12, fontWeight: FontWeight.bold)),
+                      // Text(
+                      //     "${Title.split(" ")[0]} ${Title.split(" ").length > 1 ? "..." : ""}",
+                      //     style: GoogleFonts.montserrat(
+                      //         fontSize: 12, fontWeight: FontWeight.bold)),
                       Text("$SubTitle",
-                          style: GoogleFonts.montserrat(fontSize: 8)),
+                          style: GoogleFonts.montserrat(fontSize: 10)),
+                      Text("Rp ${f.format(int.parse(Price))}",
+                          style: GoogleFonts.montserrat(
+                              fontSize: 11, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ],
@@ -75,9 +81,9 @@ class CardListHistory extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text("Rp ${f.format(int.parse(Price))}",
-                      style: GoogleFonts.montserrat(
-                          fontSize: 11, fontWeight: FontWeight.bold)),
+                  // Text("Rp ${f.format(int.parse(Price))}",
+                  //     style: GoogleFonts.montserrat(
+                  //         fontSize: 11, fontWeight: FontWeight.bold)),
                   Text("${DateFormat("dd-MMM-yyyy").format(Date)}",
                       style: GoogleFonts.montserrat(fontSize: 8)),
                 ],

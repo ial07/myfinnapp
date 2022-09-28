@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:myfinnapp/app/function/SnackbarFunction.dart';
 import 'package:myfinnapp/app/models/AccountBankList.dart';
 import 'package:myfinnapp/app/modules/create_trx/models/create_trx.dart';
+import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/service/network_handler.dart';
 
 class CreateTrxController extends GetxController {
@@ -41,7 +42,7 @@ class CreateTrxController extends GetxController {
       if (data["meta"]["code"] == 200) {
         isLoading.value = false;
 
-        Get.back();
+        Get.offAndToNamed(Routes.HOME);
         SnackbarFunction.snackBarSuccess(data["meta"]["message"]);
         idBankAccount.value = 0;
         AmountC.text = '';

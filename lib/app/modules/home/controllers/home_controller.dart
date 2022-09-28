@@ -12,36 +12,56 @@ import 'package:myfinnapp/app/function/sessionHandlerFunction.dart';
 class HomeController extends GetxController {
   final dataUser = GetStorage();
   RxInt idBankAccount = 0.obs;
+  RxBool isLoading = false.obs;
+
+  RxInt totalAmount = 0.obs;
+  RxInt currentAmount = 0.obs;
 
   var getBankList = <BankList>[].obs;
   var getTransactionsList = <Transaction>[].obs;
 
+  dynamic response = null.obs;
+
   @override
   void onInit() {
-    getAccountBank();
+    // getResponse();
+
     super.onInit();
   }
 
   @override
   void onReady() {
+    getAccountBank();
     getTransaction();
 
     super.onReady();
   }
 
+  // void getResponse() async {
+  //   isLoading.value = true;
+  //   Map<String, dynamic> data = dataUser.read("dataUser");
+  //   final idUser = data["profile"]["Id"];
+  //   response =
+  //       await NetworkHandler.get("getbankAccountbyaccountidowner/$idUser");
+
+  //   getTransaction(response);
+  // }
+
   void getTransaction() async {
+    isLoading.value = false;
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
-    var response =
+    var res =
         await NetworkHandler.get("getbankAccountbyaccountidowner/$idUser");
-    if (response.toString().contains('Session End')) {
+    if (res.toString().contains('Session End')) {
       sessionHandlerFunction.ExpiredTokenRetryPolicy();
     } else {
       AccountBankList _getAcoountBankListModel =
-          AccountBankList.fromJson(jsonDecode(response));
-      var items = _getAcoountBankListModel.data.where((e) => e.id == 2);
-      print(items);
-      print(idBankAccount.value);
+          AccountBankList.fromJson(jsonDecode(res));
+      var items = _getAcoountBankListModel.data
+          .where((e) => e.id == idBankAccount.value);
+      getTransactionsList.removeRange(0, getTransactionsList.length);
+
       if (items.isNotEmpty) {
         for (var item in items.first.transactions) {
           getTransactionsList.add(Transaction(
@@ -51,26 +71,27 @@ class HomeController extends GetxController {
               bankAccountId: item.bankAccountId,
               createdBy: item.createdBy,
               createdDate: item.createdDate,
-              notes: item.notes,
               deletedBy: item.deletedBy,
               deletedDate: item.deletedDate,
+              notes: item.notes,
               updatedBy: item.updatedBy,
               updatedDate: item.updatedDate));
         }
       }
+      update();
     }
   }
 
   void getAccountBank() async {
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
-    var response =
+    var res =
         await NetworkHandler.get("getbankAccountbyaccountidowner/$idUser");
-    if (response.toString().contains('Session End')) {
+    if (res.toString().contains('Session End')) {
       sessionHandlerFunction.ExpiredTokenRetryPolicy();
     } else {
       AccountBankList _getAcoountBankListModel =
-          AccountBankList.fromJson(jsonDecode(response));
+          AccountBankList.fromJson(jsonDecode(res));
       for (var item in _getAcoountBankListModel.data) {
         getBankList.add(BankList(
             id: item.id,

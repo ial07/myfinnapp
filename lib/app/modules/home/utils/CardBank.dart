@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:myfinnapp/app/utils/SvgIcon.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CardBank extends StatelessWidget {
   final String NamaBank;
@@ -13,6 +14,8 @@ class CardBank extends StatelessWidget {
   final int Color2;
   final bool isDebit;
   final DateTime ExpectedDate;
+  final PageController ControllerPage;
+  final int lenghtPage;
 
   CardBank({
     this.NamaBank,
@@ -23,171 +26,190 @@ class CardBank extends StatelessWidget {
     this.Color2,
     this.isDebit,
     this.ExpectedDate,
+    this.ControllerPage,
+    this.lenghtPage,
   });
 
   @override
   Widget build(BuildContext context) {
     var f = NumberFormat("#,##0.00", "en_US");
+    final _controller = PageController();
 
     return Padding(
       padding: const EdgeInsets.all(5),
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(Color1).withOpacity(1),
-              Color(Color2).withOpacity(1),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                color: Colors.black.withOpacity(0.2))
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("$NamaBank",
-                          style: GoogleFonts.amiri(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white)),
-                      isDebit ? SvgIcon.creditSVG : SvgIcon.debitSVG
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      isDebit != true
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Amount",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 13, color: Colors.white)),
-                                Text("Rp ${f.format(int.parse(Amount))}",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 13,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Current Amount",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 10, color: Colors.white)),
-                                Text("Rp ${f.format(int.parse(Amount))}",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 10,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                      isDebit == true
-                          ? Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text("Expected Amount",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 10, color: Colors.white)),
-                                Text("Rp.13,000,000",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 10,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            )
-                          : Text(""),
-                    ],
-                  ),
+      child: Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(Color1).withOpacity(1),
+                  Color(Color2).withOpacity(1),
                 ],
               ),
-              isDebit == true
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(""),
-                        Text(""),
-                        Column(
-                          children: [
-                            Text("estimated savings per month",
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 7, color: Colors.white)),
-                            Text("Rp.13,000,000",
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 7,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text("Until",
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 7, color: Colors.white)),
-                            Text(
-                                "${DateFormat("dd-MMM-yyyy").format(ExpectedDate)}",
-                                style: GoogleFonts.montserrat(
-                                    fontSize: 7,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        )
-                      ],
-                    )
-                  : Text(""),
-              Row(
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                    offset: Offset(2, 4),
+                    blurRadius: 5,
+                    color: Colors.black.withOpacity(0.2))
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("$Type",
-                          style: GoogleFonts.montserrat(
-                              fontSize: 9,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white)),
-                      Text("$Note",
-                          style: GoogleFonts.montserrat(
-                              fontSize: 7, color: Colors.white)),
-                    ],
-                  ),
-                  Container(
-                      padding: EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                              offset: Offset(2, 5),
-                              blurRadius: 10,
-                              color: Colors.black.withOpacity(0.3))
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("$NamaBank",
+                              style: GoogleFonts.amiri(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
+                          isDebit ? SvgIcon.creditSVG : SvgIcon.debitSVG
                         ],
                       ),
-                      child: Icon(Icons.list_alt_outlined, size: 22)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          isDebit != true
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Amount",
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 13, color: Colors.white)),
+                                    Text("Rp ${f.format(int.parse(Amount))}",
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 13,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                )
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("Current Amount",
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 10, color: Colors.white)),
+                                    Text("Rp ${f.format(int.parse(Amount))}",
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                          isDebit == true
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text("Expected Amount",
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 10, color: Colors.white)),
+                                    Text("Rp.13,000,000",
+                                        style: GoogleFonts.montserrat(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                )
+                              : Text(""),
+                        ],
+                      ),
+                    ],
+                  ),
+                  isDebit == true
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(""),
+                            Text(""),
+                            Column(
+                              children: [
+                                Text("estimated savings per month",
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 7, color: Colors.white)),
+                                Text("Rp.13,000,000",
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 7,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text("Until",
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 7, color: Colors.white)),
+                                Text(
+                                    "${DateFormat("dd-MMM-yyyy").format(ExpectedDate)}",
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 7,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            )
+                          ],
+                        )
+                      : Text(""),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("$Type",
+                              style: GoogleFonts.montserrat(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white)),
+                          Text("$Note",
+                              style: GoogleFonts.montserrat(
+                                  fontSize: 7, color: Colors.white)),
+                        ],
+                      ),
+                      Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5),
+                            boxShadow: [
+                              BoxShadow(
+                                  offset: Offset(2, 5),
+                                  blurRadius: 10,
+                                  color: Colors.black.withOpacity(0.3))
+                            ],
+                          ),
+                          child: Icon(Icons.list_alt_outlined, size: 22)),
+                    ],
+                  ),
                 ],
-              )
-            ],
+              ),
+            ),
           ),
-        ),
+          SizedBox(height: 5),
+          SmoothPageIndicator(
+            controller: ControllerPage,
+            count: lenghtPage,
+            effect: SwapEffect(
+              activeDotColor: Colors.blue.shade300,
+              dotColor: Colors.blue.shade100,
+              dotHeight: 5,
+              dotWidth: 10,
+              spacing: 5,
+            ),
+          ),
+        ],
       ),
     );
   }
