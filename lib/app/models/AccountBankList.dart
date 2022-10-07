@@ -4,8 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:myfinnapp/app/modules/create_bank_account/models/getBank.dart';
-
 AccountBankList accountBankListFromJson(String str) =>
     AccountBankList.fromJson(json.decode(str));
 
@@ -34,6 +32,26 @@ class AccountBankList {
       };
 }
 
+class BankList {
+  BankList({
+    this.bankAccount,
+    this.transactionTotal,
+  });
+
+  BankAccount bankAccount;
+  int transactionTotal;
+
+  factory BankList.fromJson(Map<String, dynamic> json) => BankList(
+        bankAccount: BankAccount.fromJson(json["BankAccount"]),
+        transactionTotal: json["TransactionTotal"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "BankAccount": bankAccount.toJson(),
+        "TransactionTotal": transactionTotal,
+      };
+}
+
 class Transaction {
   Transaction({
     this.id,
@@ -51,7 +69,7 @@ class Transaction {
 
   int id;
   int bankAccountId;
-  BankList bankAccount;
+  BankAccount bankAccount;
   int amount;
   String notes;
   CreatedBy createdBy;
@@ -64,7 +82,7 @@ class Transaction {
   factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
         id: json["Id"],
         bankAccountId: json["BankAccountId"],
-        bankAccount: BankList.fromJson(json["BankAccount"]),
+        bankAccount: BankAccount.fromJson(json["BankAccount"]),
         amount: json["Amount"],
         notes: json["Notes"],
         createdBy: createdByValues.map[json["CreatedBy"]],
@@ -90,8 +108,8 @@ class Transaction {
       };
 }
 
-class BankList {
-  BankList({
+class BankAccount {
+  BankAccount({
     this.id,
     this.userAccountId,
     this.userAccount,
@@ -129,7 +147,7 @@ class BankList {
   String deletedBy;
   DateTime deletedDate;
 
-  factory BankList.fromJson(Map<String, dynamic> json) => BankList(
+  factory BankAccount.fromJson(Map<String, dynamic> json) => BankAccount(
         id: json["Id"],
         userAccountId: json["UserAccountId"],
         userAccount: UserAccount.fromJson(json["UserAccount"]),

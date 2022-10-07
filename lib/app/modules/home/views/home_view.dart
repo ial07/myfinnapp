@@ -11,6 +11,7 @@ import 'package:myfinnapp/app/modules/home/utils/CardWelcome.dart';
 import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/app/utils/BottomBar.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../controllers/home_controller.dart';
 import '../../../utils/color.dart' as color;
 
@@ -158,13 +159,24 @@ class HomeView extends GetView<HomeController> {
                                             .getBankList[index].isDebit,
                                         ExpectedDate: controller
                                             .getBankList[index].expiredDate,
-                                        ControllerPage: _controller,
-                                        lenghtPage:
-                                            controller.getBankList.length,
                                       );
                                     }),
                               ),
                             )),
+                      Obx(() => controller.getBankList.isNotEmpty
+                          ? SmoothPageIndicator(
+                              controller: _controller,
+                              count: controller.getBankList.length,
+                              effect: SwapEffect(
+                                activeDotColor: Colors.blue.shade300,
+                                dotColor: Colors.blue.shade100,
+                                dotHeight: 5,
+                                dotWidth: 10,
+                                spacing: 5,
+                              ),
+                            )
+                          : Text("")),
+                      SizedBox(height: 5),
 
                       /// List Transaction Text
                       Align(

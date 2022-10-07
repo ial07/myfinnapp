@@ -15,7 +15,7 @@ class CreateTrxController extends GetxController {
 
   RxInt idBankAccount = 0.obs;
 
-  var getAccountBankList = <BankList>[].obs;
+  var getAccountBankList = <BankAccount>[].obs;
 
   TextEditingController BankAccountNameC = TextEditingController();
   TextEditingController AmountC = TextEditingController();
@@ -69,23 +69,24 @@ class CreateTrxController extends GetxController {
     AccountBankList _getAcoountBankListModel =
         AccountBankList.fromJson(jsonDecode(response));
     for (var item in _getAcoountBankListModel.data) {
-      getAccountBankList.add(BankList(
-          id: item.id,
-          accountIdOwner: item.accountIdOwner,
-          amount: item.amount,
-          bank: item.bank,
-          bankCode: item.bankCode,
-          userAccountId: item.userAccountId,
-          userAccount: item.userAccount,
-          notes: item.notes,
-          isDebit: item.isDebit,
-          expiredDate: item.expiredDate,
-          updatedDate: item.updatedDate,
-          createdDate: item.createdDate,
-          updatedBy: item.updatedBy,
-          createdBy: item.createdBy,
-          deletedBy: item.deletedBy,
-          deletedDate: item.deletedDate));
+      getAccountBankList.add(BankAccount(
+          transactions: item.bankAccount.transactions,
+          id: item.bankAccount.id,
+          accountIdOwner: item.bankAccount.accountIdOwner,
+          amount: item.bankAccount.amount,
+          bank: item.bankAccount.bank,
+          bankCode: item.bankAccount.bankCode,
+          userAccountId: item.bankAccount.userAccountId,
+          userAccount: item.bankAccount.userAccount,
+          notes: item.bankAccount.notes,
+          isDebit: item.bankAccount.isDebit,
+          expiredDate: item.bankAccount.expiredDate,
+          updatedDate: item.bankAccount.updatedDate,
+          createdDate: item.bankAccount.createdDate,
+          updatedBy: item.bankAccount.updatedBy,
+          createdBy: item.bankAccount.createdBy,
+          deletedBy: item.bankAccount.deletedBy,
+          deletedDate: item.bankAccount.deletedDate));
     }
   }
 }

@@ -17,7 +17,7 @@ class HomeController extends GetxController {
   RxInt totalAmount = 0.obs;
   RxInt currentAmount = 0.obs;
 
-  var getBankList = <BankList>[].obs;
+  var getBankList = <BankAccount>[].obs;
   var getTransactionsList = <Transaction>[].obs;
 
   dynamic response = null.obs;
@@ -59,11 +59,11 @@ class HomeController extends GetxController {
       AccountBankList _getAcoountBankListModel =
           AccountBankList.fromJson(jsonDecode(res));
       var items = _getAcoountBankListModel.data
-          .where((e) => e.id == idBankAccount.value);
+          .where((e) => e.bankAccount.id == idBankAccount.value);
       getTransactionsList.removeRange(0, getTransactionsList.length);
 
       if (items.isNotEmpty) {
-        for (var item in items.first.transactions) {
+        for (var item in items.first.bankAccount.transactions) {
           getTransactionsList.add(Transaction(
               id: item.id,
               amount: item.amount,
@@ -93,23 +93,24 @@ class HomeController extends GetxController {
       AccountBankList _getAcoountBankListModel =
           AccountBankList.fromJson(jsonDecode(res));
       for (var item in _getAcoountBankListModel.data) {
-        getBankList.add(BankList(
-            id: item.id,
-            accountIdOwner: item.accountIdOwner,
-            amount: item.amount,
-            bank: item.bank,
-            bankCode: item.bankCode,
-            userAccountId: item.userAccountId,
-            userAccount: item.userAccount,
-            notes: item.notes,
-            isDebit: item.isDebit,
-            expiredDate: item.expiredDate,
-            updatedDate: item.updatedDate,
-            createdDate: item.createdDate,
-            updatedBy: item.updatedBy,
-            createdBy: item.createdBy,
-            deletedBy: item.deletedBy,
-            deletedDate: item.deletedDate));
+        getBankList.add(BankAccount(
+            transactions: item.bankAccount.transactions,
+            id: item.bankAccount.id,
+            accountIdOwner: item.bankAccount.accountIdOwner,
+            amount: item.bankAccount.amount,
+            bank: item.bankAccount.bank,
+            bankCode: item.bankAccount.bankCode,
+            userAccountId: item.bankAccount.userAccountId,
+            userAccount: item.bankAccount.userAccount,
+            notes: item.bankAccount.notes,
+            isDebit: item.bankAccount.isDebit,
+            expiredDate: item.bankAccount.expiredDate,
+            updatedDate: item.bankAccount.updatedDate,
+            createdDate: item.bankAccount.createdDate,
+            updatedBy: item.bankAccount.updatedBy,
+            createdBy: item.bankAccount.createdBy,
+            deletedBy: item.bankAccount.deletedBy,
+            deletedDate: item.bankAccount.deletedDate));
       }
     }
   }

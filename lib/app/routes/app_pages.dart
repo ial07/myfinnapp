@@ -12,6 +12,8 @@ import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/start_page/bindings/start_page_binding.dart';
 import '../modules/start_page/views/start_page_view.dart';
+import '../modules/statistic/bindings/statistic_binding.dart';
+import '../modules/statistic/views/statistic_view.dart';
 
 part 'app_routes.dart';
 
@@ -50,6 +52,11 @@ class AppPages {
       name: _Paths.CREATE_TRX,
       page: () => CreateTrxView(),
       binding: CreateTrxBinding(),
+    ),
+    GetPage(
+      name: _Paths.STATISTIC,
+      page: () => StatisticView(),
+      binding: StatisticBinding(),
     ),
   ];
 }

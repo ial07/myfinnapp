@@ -9,6 +9,7 @@ abstract class Routes {
   static const START_PAGE = _Paths.START_PAGE;
   static const CREATE_BANK_ACCOUNT = _Paths.CREATE_BANK_ACCOUNT;
   static const CREATE_TRX = _Paths.CREATE_TRX;
+  static const STATISTIC = _Paths.STATISTIC;
 }
 
 abstract class _Paths {
@@ -19,4 +20,5 @@ abstract class _Paths {
   static const START_PAGE = '/start-page';
   static const CREATE_BANK_ACCOUNT = '/create-bank-account';
   static const CREATE_TRX = '/create-trx';
+  static const STATISTIC = '/statistic';
 }

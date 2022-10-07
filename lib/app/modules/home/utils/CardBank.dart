@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/app/utils/SvgIcon.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class CardBank extends StatelessWidget {
   final String NamaBank;
@@ -14,8 +15,6 @@ class CardBank extends StatelessWidget {
   final int Color2;
   final bool isDebit;
   final DateTime ExpectedDate;
-  final PageController ControllerPage;
-  final int lenghtPage;
 
   CardBank({
     this.NamaBank,
@@ -26,14 +25,11 @@ class CardBank extends StatelessWidget {
     this.Color2,
     this.isDebit,
     this.ExpectedDate,
-    this.ControllerPage,
-    this.lenghtPage,
   });
 
   @override
   Widget build(BuildContext context) {
     var f = NumberFormat("#,##0.00", "en_US");
-    final _controller = PageController();
 
     return Padding(
       padding: const EdgeInsets.all(5),
@@ -178,35 +174,28 @@ class CardBank extends StatelessWidget {
                                   fontSize: 7, color: Colors.white)),
                         ],
                       ),
-                      Container(
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(5),
-                            boxShadow: [
-                              BoxShadow(
-                                  offset: Offset(2, 5),
-                                  blurRadius: 10,
-                                  color: Colors.black.withOpacity(0.3))
-                            ],
-                          ),
-                          child: Icon(Icons.list_alt_outlined, size: 22)),
+                      InkWell(
+                        onTap: () {
+                          Get.toNamed(Routes.STATISTIC);
+                        },
+                        child: Container(
+                            padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: [
+                                BoxShadow(
+                                    offset: Offset(2, 5),
+                                    blurRadius: 10,
+                                    color: Colors.black.withOpacity(0.3))
+                              ],
+                            ),
+                            child: Icon(Icons.query_stats_rounded, size: 22)),
+                      ),
                     ],
                   ),
                 ],
               ),
-            ),
-          ),
-          SizedBox(height: 5),
-          SmoothPageIndicator(
-            controller: ControllerPage,
-            count: lenghtPage,
-            effect: SwapEffect(
-              activeDotColor: Colors.blue.shade300,
-              dotColor: Colors.blue.shade100,
-              dotHeight: 5,
-              dotWidth: 10,
-              spacing: 5,
             ),
           ),
         ],

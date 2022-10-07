@@ -48,7 +48,7 @@ class CreateTrxView extends GetView<CreateTrxController> {
 
             // Dropdown Account
             Obx(() => controller.getAccountBankList.isNotEmpty
-                ? DropdownSearch<BankList>(
+                ? DropdownSearch<BankAccount>(
                     showSearchBox: true,
                     dropdownSearchDecoration:
                         InputDecoration(labelText: "Bank Account Name"),
@@ -60,9 +60,9 @@ class CreateTrxView extends GetView<CreateTrxController> {
                     onFind: (text) async {
                       var res = await controller.getAccountBankList;
                       if (res.length > 0) {
-                        List<BankList> allAccountName = [];
+                        List<BankAccount> allAccountName = [];
                         res.forEach((element) {
-                          allAccountName.add(BankList(
+                          allAccountName.add(BankAccount(
                             id: element.id,
                             userAccount: element.userAccount,
                             bank: element.bank,
@@ -123,7 +123,7 @@ class CreateTrxView extends GetView<CreateTrxController> {
   }
 }
 
-Widget _customDropDownPrograms(BuildContext context, BankList item) {
+Widget _customDropDownPrograms(BuildContext context, BankAccount item) {
   return Container(
       child: (item == null)
           ? const ListTile(
