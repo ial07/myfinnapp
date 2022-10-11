@@ -15,6 +15,7 @@ class CardBank extends StatelessWidget {
   final int Color2;
   final bool isDebit;
   final DateTime ExpectedDate;
+  final int TotalMonthExpenses;
 
   CardBank({
     this.NamaBank,
@@ -25,6 +26,7 @@ class CardBank extends StatelessWidget {
     this.Color2,
     this.isDebit,
     this.ExpectedDate,
+    this.TotalMonthExpenses,
   });
 
   @override
@@ -84,7 +86,8 @@ class CardBank extends StatelessWidget {
                                     Text("Amount",
                                         style: GoogleFonts.montserrat(
                                             fontSize: 13, color: Colors.white)),
-                                    Text("Rp ${f.format(int.parse(Amount))}",
+                                    Text(
+                                        "Rp ${f.format(int.parse(Amount) - TotalMonthExpenses)}",
                                         style: GoogleFonts.montserrat(
                                             fontSize: 13,
                                             color: Colors.white,

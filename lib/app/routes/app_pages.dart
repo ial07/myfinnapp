@@ -1,5 +1,9 @@
 import 'package:get/get.dart';
 
+import '../modules/Profile_edit/bindings/profile_edit_binding.dart';
+import '../modules/Profile_edit/views/profile_edit_view.dart';
+import '../modules/Profile_page/bindings/profile_page_binding.dart';
+import '../modules/Profile_page/views/profile_page_view.dart';
 import '../modules/create_bank_account/bindings/create_bank_account_binding.dart';
 import '../modules/create_bank_account/views/create_bank_account_view.dart';
 import '../modules/create_trx/bindings/create_trx_binding.dart';
@@ -57,6 +61,16 @@ class AppPages {
       name: _Paths.STATISTIC,
       page: () => StatisticView(),
       binding: StatisticBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE_PAGE,
+      page: () => ProfilePageView(),
+      binding: ProfilePageBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE_EDIT,
+      page: () => ProfileEditView(),
+      binding: ProfileEditBinding(),
     ),
   ];
 }

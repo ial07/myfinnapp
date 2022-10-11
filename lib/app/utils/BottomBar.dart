@@ -18,9 +18,9 @@ class BottomBar extends StatelessWidget {
 
       items: [
         TabItem(icon: Icons.home),
-        TabItem(icon: Icons.list_alt),
+        // TabItem(icon: Icons.list_alt),
         TabItem(icon: Icons.add),
-        TabItem(icon: Icons.account_balance_wallet),
+        // TabItem(icon: Icons.account_balance_wallet),
         TabItem(icon: Icons.people_alt),
       ],
       initialActiveIndex: pageC.pageIndex.value, //optional, default as 0

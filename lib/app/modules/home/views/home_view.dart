@@ -127,10 +127,7 @@ class HomeView extends GetView<HomeController> {
                                     itemBuilder: (context, index) {
                                       controller.idBankAccount.value =
                                           controller.getBankList[index].id;
-                                      // controller.currentAmount.value =
-                                      //     controller.getBankList[index].amount -
-                                      //         controller.totalAmount.value;
-                                      // print(controller.currentAmount.value);
+                                      controller.getExpenseMonth();
                                       controller.getTransaction();
                                       var colors = controller
                                           .getBankList[index].bank.color;
@@ -142,24 +139,26 @@ class HomeView extends GetView<HomeController> {
                                         colors = '0x00000;0x2c3e50';
                                       }
                                       colorresult = colors.split(';');
-                                      return CardBank(
-                                        NamaBank: controller
-                                            .getBankList[index].bank.name,
-                                        Amount: controller
-                                            .getBankList[index].amount
-                                            .toString(),
-                                        Type: controller.getBankList[index]
-                                            .userAccount.accountName
-                                            .toString(),
-                                        Note:
-                                            controller.getBankList[index].notes,
-                                        Color1: int.parse(colorresult[0]),
-                                        Color2: int.parse(colorresult[1]),
-                                        isDebit: controller
-                                            .getBankList[index].isDebit,
-                                        ExpectedDate: controller
-                                            .getBankList[index].expiredDate,
-                                      );
+                                      return Obx(() => CardBank(
+                                            TotalMonthExpenses: controller
+                                                .TotalMonthExpenses.value,
+                                            NamaBank: controller
+                                                .getBankList[index].bank.name,
+                                            Amount: controller
+                                                .getBankList[index].amount
+                                                .toString(),
+                                            Type: controller.getBankList[index]
+                                                .userAccount.accountName
+                                                .toString(),
+                                            Note: controller
+                                                .getBankList[index].notes,
+                                            Color1: int.parse(colorresult[0]),
+                                            Color2: int.parse(colorresult[1]),
+                                            isDebit: controller
+                                                .getBankList[index].isDebit,
+                                            ExpectedDate: controller
+                                                .getBankList[index].expiredDate,
+                                          ));
                                     }),
                               ),
                             )),
@@ -197,10 +196,6 @@ class HomeView extends GetView<HomeController> {
             Obx(() => controller.getTransactionsList.isNotEmpty
                     ? SliverList(
                         delegate: SliverChildBuilderDelegate((context, index) {
-                        controller.totalAmount.value = 0;
-                        controller.totalAmount.value +=
-                            controller.getTransactionsList[index].amount;
-
                         return CardListHistory(
                           // Title: "Notes",
                           SubTitle: controller.getTransactionsList[index].notes,

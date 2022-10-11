@@ -29,7 +29,7 @@ class CardStatistic extends StatelessWidget {
   Widget build(BuildContext context) {
     var f = NumberFormat("#,##0.00", "en_US");
 
-    // print(SumAmmountWeek.length);
+    print(SumAmmountWeek);
 
     for (var i = 0; i < valueStatic.length; i++) {
       totalWeakly += valueStatic[i];
@@ -138,6 +138,11 @@ class CardStatistic extends StatelessWidget {
                         : availableColors[1]);
               case 4:
                 return makeGroupData(4, valueStaticMonth[i],
+                    barColor: valueStaticMonth[i] >= 5
+                        ? availableColors[0]
+                        : availableColors[1]);
+              case 5:
+                return makeGroupData(5, valueStaticMonth[i],
                     barColor: valueStaticMonth[i] >= 5
                         ? availableColors[0]
                         : availableColors[1]);

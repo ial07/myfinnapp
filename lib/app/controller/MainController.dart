@@ -11,9 +11,6 @@ class MainController extends GetxController {
     pageIndex.value = i;
     switch (i) {
       case 1:
-        Get.offAllNamed(Routes.HOME);
-        break;
-      case 2:
         Get.bottomSheet(
           CreateTrxView(),
           isScrollControlled: true,
@@ -24,12 +21,15 @@ class MainController extends GetxController {
           ),
         );
         break;
-      case 3:
-        Get.offAllNamed(Routes.HOME);
+      case 2:
+        Get.offAllNamed(Routes.PROFILE_PAGE);
         break;
-      case 4:
-        Get.offAllNamed(Routes.HOME);
-        break;
+      // case 3:
+      //   Get.offAllNamed(Routes.HOME);
+      //   break;
+      // case 4:
+      //   Get.offAllNamed(Routes.HOME);
+      //   break;
       default:
         Get.offAllNamed(Routes.HOME);
     }

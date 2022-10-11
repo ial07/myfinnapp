@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:myfinnapp/app/models/AccountBankList.dart';
 import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/service/network_handler.dart';
@@ -13,9 +14,10 @@ class HomeController extends GetxController {
   final dataUser = GetStorage();
   RxInt idBankAccount = 0.obs;
   RxBool isLoading = false.obs;
+  DateTime now = DateTime.now();
+  var Year = DateFormat('yyyy').format(DateTime.now()).toString();
 
-  RxInt totalAmount = 0.obs;
-  RxInt currentAmount = 0.obs;
+  RxInt TotalMonthExpenses = 0.obs;
 
   var getBankList = <BankAccount>[].obs;
   var getTransactionsList = <Transaction>[].obs;
@@ -25,13 +27,14 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     // getResponse();
+    getAccountBank();
 
     super.onInit();
   }
 
   @override
   void onReady() {
-    getAccountBank();
+    getExpenseMonth();
     getTransaction();
 
     super.onReady();
@@ -112,6 +115,96 @@ class HomeController extends GetxController {
             deletedBy: item.bankAccount.deletedBy,
             deletedDate: item.bankAccount.deletedDate));
       }
+    }
+  }
+
+  String getMonth() {
+    var m = DateFormat('MM').format(now);
+    var month = "";
+    switch (m) {
+      case '01':
+        {
+          month = "January";
+        }
+        break;
+      case '02':
+        {
+          month = "February";
+        }
+        break;
+      case '03':
+        {
+          month = "March";
+        }
+        break;
+      case '04':
+        {
+          month = "April";
+        }
+        break;
+      case '05':
+        {
+          month = "May";
+        }
+        break;
+      case '06':
+        {
+          month = "Juni";
+        }
+        break;
+      case '07':
+        {
+          month = "July";
+        }
+        break;
+      case '08':
+        {
+          month = "August";
+        }
+        break;
+      case '09':
+        {
+          month = "September";
+        }
+        break;
+      case '10':
+        {
+          month = "October";
+        }
+        break;
+      case '11':
+        {
+          month = "November";
+        }
+        break;
+      case '12':
+        {
+          month = "Desember";
+        }
+        break;
+    }
+    return month;
+  }
+
+  void getExpenseMonth() async {
+    Map<String, dynamic> data = dataUser.read("dataUser");
+    final idUser = data["profile"]["Id"];
+    var response = await NetworkHandler.get(
+        "gettransactionbybankaccountid/${idBankAccount.value}");
+    if (response.toString().contains('Session End')) {
+      sessionHandlerFunction.ExpiredTokenRetryPolicy();
+    } else {
+      var result = json.decode(response);
+
+      if (result.toString().contains('Get Transaction Success')) {
+        if (result["data"]["MonthTotal"]["${getMonth()} $Year"] != null) {
+          TotalMonthExpenses.value =
+              result["data"]["MonthTotal"]["${getMonth()} $Year"];
+        } else {
+          TotalMonthExpenses.value = 0;
+        }
+      }
+      print(TotalMonthExpenses.value);
     }
   }
 }

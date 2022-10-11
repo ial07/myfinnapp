@@ -123,14 +123,14 @@ class StatisticController extends GetxController {
 
       for (var month in months) {
         temp2[month + " $Year"] = result["data"]["Month"][month + " $Year"];
-        for (var i = 1; i < 6; i++) {
+        for (var i = 1; i < 7; i++) {
           temp["week " + i.toString() + " " + month + " $Year"] =
               (result["data"]["Week"]
                   ["week " + i.toString() + " " + month + " $Year"]);
         }
       }
 
-      for (var i = 1; i < 6; i++) {
+      for (var i = 1; i < 7; i++) {
         if (temp["week $i ${getMonth()} $Year"] == null) {
           GetListWeekMonth.add(0);
         } else {
