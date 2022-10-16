@@ -15,21 +15,29 @@ class CardStatistic extends StatelessWidget {
   ];
 
   final List<double> valueStatic = [2, 2, 6, 4, 6, 7, 3];
-  final List<double> valueStaticMonth = [2.0, 2.0, 6.0, 4.0];
+  final List<double> valueStaticMonth = [2.0, 2.0, 6.0, 4.0, 5.0, 7.0];
   final List<double> valueStaticYearly = [3, 4, 10, 6, 4, 9, 5, 5, 7, 8, 2, 7];
 
   double totalWeakly = 0;
 
   final int valueChoose;
-  final List<double> SumAmmountWeek;
+  List<double> getMonthList;
+  double largestMonth;
 
-  CardStatistic({this.valueChoose, this.SumAmmountWeek});
+  CardStatistic({this.valueChoose, this.getMonthList});
 
   @override
   Widget build(BuildContext context) {
+    largestMonth = getMonthList[0];
+    for (var i = 0; i < getMonthList.length; i++) {
+      if (getMonthList[i] > largestMonth) {
+        largestMonth = getMonthList[i];
+      }
+    }
+    print(largestMonth * 1.5 / 2);
     var f = NumberFormat("#,##0.00", "en_US");
 
-    print(SumAmmountWeek);
+    // print(getMonthList);
 
     for (var i = 0; i < valueStatic.length; i++) {
       totalWeakly += valueStatic[i];
@@ -114,36 +122,41 @@ class CardStatistic extends StatelessWidget {
 
     var barChartMonthly = BarChart(
       BarChartData(
-          barGroups: List.generate(valueStaticMonth.length, (i) {
+          barGroups: List.generate(getMonthList.length, (i) {
             switch (i) {
               case 0:
-                return makeGroupData(0, valueStaticMonth[i],
-                    barColor: valueStaticMonth[i] >= 5
+                return makeGroupData(0, getMonthList[i],
+                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
                         ? availableColors[0]
                         : availableColors[1]);
               case 1:
-                return makeGroupData(1, valueStaticMonth[i],
-                    barColor: valueStaticMonth[i] >= 5
+                return makeGroupData(1, getMonthList[i],
+                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
                         ? availableColors[0]
                         : availableColors[1]);
               case 2:
-                return makeGroupData(2, valueStaticMonth[i],
-                    barColor: valueStaticMonth[i] >= 5
+                return makeGroupData(2, getMonthList[i],
+                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
                         ? availableColors[0]
                         : availableColors[1]);
               case 3:
-                return makeGroupData(3, valueStaticMonth[i],
-                    barColor: valueStaticMonth[i] >= 5
+                return makeGroupData(3, getMonthList[i],
+                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
                         ? availableColors[0]
                         : availableColors[1]);
               case 4:
-                return makeGroupData(4, valueStaticMonth[i],
-                    barColor: valueStaticMonth[i] >= 5
+                return makeGroupData(4, getMonthList[i],
+                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
                         ? availableColors[0]
                         : availableColors[1]);
               case 5:
-                return makeGroupData(5, valueStaticMonth[i],
-                    barColor: valueStaticMonth[i] >= 5
+                return makeGroupData(5, getMonthList[i],
+                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
+                        ? availableColors[0]
+                        : availableColors[1]);
+              case 6:
+                return makeGroupData(6, getMonthList[i],
+                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
                         ? availableColors[0]
                         : availableColors[1]);
               default:
@@ -318,7 +331,7 @@ class CardStatistic extends StatelessWidget {
                             : staticC.valueChoose == 2
                                 ? valueStaticMonth.length > 0
                                     ? barChartMonthly
-                                    : Text("data")
+                                    : Container()
                                 : staticC.valueChoose == 3
                                     ? barChartYearly
                                     : barChartWeekly,
@@ -342,10 +355,10 @@ class CardStatistic extends StatelessWidget {
     // print(totalWeakly);
     if (value == 0) {
       text = '1K';
-    } else if (value == 25000) {
-      text = 'ETS ${(totalWeakly / 2).toString()}K';
-    } else if (value == 35000) {
-      text = '${totalWeakly.toString()}K';
+    } else if (value == ((largestMonth * 1.5) / 2)) {
+      text = 'ETS ${((largestMonth * 1.5) / 2).toString()}K';
+    } else if (value == largestMonth * 1.5) {
+      text = '${(largestMonth * 1.5).toString()}K';
     } else {
       return Container();
     }
@@ -355,126 +368,126 @@ class CardStatistic extends StatelessWidget {
       child: Text(text, style: style),
     );
   }
-}
 
-Widget bottomTitlesWeekly(double value, TitleMeta meta) {
-  List<String> titles = ["Mn", "Te", "Wd", "Tu", "Fr", "St", "Su"];
+  Widget bottomTitlesWeekly(double value, TitleMeta meta) {
+    List<String> titles = ["Mn", "Te", "Wd", "Tu", "Fr", "St", "Su"];
 
-  Widget text = Text(
-    titles[value.toInt()],
-    style: TextStyle(
-      color: Colors.blue[300],
-      fontWeight: FontWeight.bold,
-      fontSize: 12,
-    ),
-  );
-
-  return SideTitleWidget(
-    axisSide: meta.axisSide,
-    space: 16, //margin top
-    child: text,
-  );
-}
-
-Widget bottomTitlesMonthly(double value, TitleMeta meta) {
-  List<String> titles = ["W1", "W2", "W3", "W4", "W5"];
-
-  Widget text = Text(
-    titles[value.toInt()],
-    style: TextStyle(
-      color: Colors.blue[300],
-      fontWeight: FontWeight.bold,
-      fontSize: 12,
-    ),
-  );
-
-  return SideTitleWidget(
-    axisSide: meta.axisSide,
-    space: 16, //margin top
-    child: text,
-  );
-}
-
-Widget bottomTitlesYearly(double value, TitleMeta meta) {
-  List<String> titles = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Agt",
-    "Sep",
-    "Okt",
-    "Nov",
-    "Dec"
-  ];
-
-  Widget text = Text(
-    titles[value.toInt()],
-    style: TextStyle(
-      color: Colors.blue[300],
-      fontWeight: FontWeight.bold,
-      fontSize: 8,
-    ),
-  );
-
-  return SideTitleWidget(
-    axisSide: meta.axisSide,
-    space: 10, //margin top
-    child: text,
-  );
-}
-
-BarChartGroupData makeGroupData(
-  int x,
-  double y, {
-  Color barColor = Colors.white,
-  double width = 22,
-  List<int> showTooltips = const [],
-}) {
-  return BarChartGroupData(
-    x: x,
-    barRods: [
-      BarChartRodData(
-        toY: y,
-        color: barColor,
-        width: width,
-        borderSide: const BorderSide(color: Colors.white, width: 0),
-        backDrawRodData: BackgroundBarChartRodData(
-          show: true,
-          toY: 10,
-          color: Colors.grey.shade200,
-        ),
+    Widget text = Text(
+      titles[value.toInt()],
+      style: TextStyle(
+        color: Colors.blue[300],
+        fontWeight: FontWeight.bold,
+        fontSize: 12,
       ),
-    ],
-    showingTooltipIndicators: showTooltips,
-  );
-}
+    );
 
-BarChartGroupData makeGroupDataYearly(
-  int x,
-  double y, {
-  Color barColor = Colors.white,
-  double width = 15,
-  List<int> showTooltips = const [],
-}) {
-  return BarChartGroupData(
-    x: x,
-    barRods: [
-      BarChartRodData(
-        toY: y,
-        color: barColor,
-        width: width,
-        borderSide: const BorderSide(color: Colors.white, width: 0),
-        backDrawRodData: BackgroundBarChartRodData(
-          show: true,
-          toY: 10,
-          color: Colors.grey.shade200,
-        ),
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 16, //margin top
+      child: text,
+    );
+  }
+
+  Widget bottomTitlesMonthly(double value, TitleMeta meta) {
+    List<String> titles = ["W1", "W2", "W3", "W4", "W5", "W6"];
+
+    Widget text = Text(
+      titles[value.toInt()],
+      style: TextStyle(
+        color: Colors.blue[300],
+        fontWeight: FontWeight.bold,
+        fontSize: 12,
       ),
-    ],
-    showingTooltipIndicators: showTooltips,
-  );
+    );
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 16, //margin top
+      child: text,
+    );
+  }
+
+  Widget bottomTitlesYearly(double value, TitleMeta meta) {
+    List<String> titles = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Agt",
+      "Sep",
+      "Okt",
+      "Nov",
+      "Dec"
+    ];
+
+    Widget text = Text(
+      titles[value.toInt()],
+      style: TextStyle(
+        color: Colors.blue[300],
+        fontWeight: FontWeight.bold,
+        fontSize: 8,
+      ),
+    );
+
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      space: 10, //margin top
+      child: text,
+    );
+  }
+
+  BarChartGroupData makeGroupData(
+    int x,
+    double y, {
+    Color barColor = Colors.white,
+    double width = 22,
+    List<int> showTooltips = const [],
+  }) {
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: y,
+          color: barColor,
+          width: width,
+          borderSide: const BorderSide(color: Colors.white, width: 0),
+          backDrawRodData: BackgroundBarChartRodData(
+            show: true,
+            toY: largestMonth * 1.5,
+            color: Colors.grey.shade200,
+          ),
+        ),
+      ],
+      showingTooltipIndicators: showTooltips,
+    );
+  }
+
+  BarChartGroupData makeGroupDataYearly(
+    int x,
+    double y, {
+    Color barColor = Colors.white,
+    double width = 15,
+    List<int> showTooltips = const [],
+  }) {
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: y,
+          color: barColor,
+          width: width,
+          borderSide: const BorderSide(color: Colors.white, width: 0),
+          backDrawRodData: BackgroundBarChartRodData(
+            show: true,
+            toY: largestMonth * 1.5,
+            color: Colors.grey.shade200,
+          ),
+        ),
+      ],
+      showingTooltipIndicators: showTooltips,
+    );
+  }
 }

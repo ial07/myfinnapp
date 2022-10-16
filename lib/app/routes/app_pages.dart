@@ -4,6 +4,8 @@ import '../modules/Profile_edit/bindings/profile_edit_binding.dart';
 import '../modules/Profile_edit/views/profile_edit_view.dart';
 import '../modules/Profile_page/bindings/profile_page_binding.dart';
 import '../modules/Profile_page/views/profile_page_view.dart';
+import '../modules/change_password/bindings/change_password_binding.dart';
+import '../modules/change_password/views/change_password_view.dart';
 import '../modules/create_bank_account/bindings/create_bank_account_binding.dart';
 import '../modules/create_bank_account/views/create_bank_account_view.dart';
 import '../modules/create_trx/bindings/create_trx_binding.dart';
@@ -16,6 +18,8 @@ import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/start_page/bindings/start_page_binding.dart';
 import '../modules/start_page/views/start_page_view.dart';
+import '../modules/staticCredit/bindings/static_credit_binding.dart';
+import '../modules/staticCredit/views/static_credit_view.dart';
 import '../modules/statistic/bindings/statistic_binding.dart';
 import '../modules/statistic/views/statistic_view.dart';
 
@@ -71,6 +75,16 @@ class AppPages {
       name: _Paths.PROFILE_EDIT,
       page: () => ProfileEditView(),
       binding: ProfileEditBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHANGE_PASSWORD,
+      page: () => ChangePasswordView(),
+      binding: ChangePasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.STATIC_CREDIT,
+      page: () => StaticCreditView(),
+      binding: StaticCreditBinding(),
     ),
   ];
 }

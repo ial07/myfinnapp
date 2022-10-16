@@ -30,7 +30,9 @@ class ProfilePageView extends GetView<ProfilePageController> {
                     '3',
                     style: GoogleFonts.montserrat(color: Colors.white),
                   ),
-                  child: Icon(Icons.notifications),
+                  child: InkWell(
+                      // onTap: () => controller.getUser(),
+                      child: Icon(Icons.notifications)),
                 )
               ],
             ),
@@ -41,18 +43,23 @@ class ProfilePageView extends GetView<ProfilePageController> {
                 Center(
                   child: CircleAvatar(
                     radius: 70,
-                    backgroundColor: Colors.teal,
-                    child: CircleAvatar(
-                        backgroundColor: Colors.greenAccent[400],
+                    backgroundColor: Colors.blue[300],
+                    child: Obx(() => CircleAvatar(
                         radius: 65,
-                        child: Icon(Icons.person)),
+                        backgroundImage: NetworkImage(controller
+                                .UserDatas.isNotEmpty
+                            ? controller.UserDatas[0].photo.isNotEmpty
+                                ? controller.UserDatas[0].photo
+                                : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=${controller.UserDatas[0].email}"
+                            : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=MY"))),
                   ),
                 ),
                 Positioned(
                   top: size.height * 0.16,
                   left: size.width * 0.45,
                   child: InkWell(
-                    onTap: () => Get.toNamed(Routes.PROFILE_EDIT),
+                    onTap: () => Get.toNamed(Routes.PROFILE_EDIT,
+                        arguments: controller.UserDatas[0]),
                     child: CircleAvatar(
                       radius: 19,
                       backgroundColor: Colors.blue[50],
@@ -69,13 +76,19 @@ class ProfilePageView extends GetView<ProfilePageController> {
                 ),
               ],
             ),
-            Text("ILHAM ALMALIK",
-                style: GoogleFonts.montserrat(fontWeight: FontWeight.bold)),
-            Text("ialilham77@gmail.com",
+            Obx(() => Text(
+                controller.UserDatas.isNotEmpty
+                    ? controller.UserDatas[0].userName
+                    : "",
+                style: GoogleFonts.montserrat(fontWeight: FontWeight.bold))),
+            Obx(() => Text(
+                controller.UserDatas.isNotEmpty
+                    ? controller.UserDatas[0].email
+                    : "",
                 style: GoogleFonts.montserrat(
-                    fontSize: 11, fontStyle: FontStyle.italic)),
+                    fontSize: 11, fontStyle: FontStyle.italic))),
             SizedBox(
-              height: size.height * 0.1,
+              height: size.height * 0.05,
             ),
             Card(
               shape: RoundedRectangleBorder(
@@ -88,6 +101,12 @@ class ProfilePageView extends GetView<ProfilePageController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
+                    onTap: () => Get.toNamed(Routes.CHANGE_PASSWORD),
+                    leading: Icon(Icons.key_rounded),
+                    title: Text("Change password",
+                        style: GoogleFonts.montserrat()),
+                  ),
+                  ListTile(
                     leading: Icon(Icons.phone_callback_rounded),
                     title: Text("Contact Us", style: GoogleFonts.montserrat()),
                   ),
@@ -98,7 +117,7 @@ class ProfilePageView extends GetView<ProfilePageController> {
                 ],
               ),
             ),
-            SizedBox(height: size.height * 0.05),
+            SizedBox(height: size.height * 0.04),
             Text("v1.0",
                 style: GoogleFonts.montserrat(
                     color: Colors.grey,

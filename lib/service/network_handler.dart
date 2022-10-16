@@ -17,6 +17,13 @@ class NetworkHandler {
     return response.body;
   }
 
+  static Future<String> resendEmail(String endpoint) async {
+    var response = await client
+        .get(buildUrl(endpoint), headers: {"Content-type": "application/json"});
+
+    return response.body;
+  }
+
   static Future<dynamic> get(String endpoint) async {
     var Token = await NetworkHandler.getToken();
     if (Token != null) {
@@ -32,6 +39,16 @@ class NetworkHandler {
     var Token = await NetworkHandler.getToken();
 
     var response = await client.post(buildUrl(endpoint), body: body, headers: {
+      "Content-type": "application/json",
+      "Authorization": "Bearer $Token"
+    });
+    return response.body;
+  }
+
+  static Future<String> put(var body, String endpoint) async {
+    var Token = await NetworkHandler.getToken();
+
+    var response = await client.put(buildUrl(endpoint), body: body, headers: {
       "Content-type": "application/json",
       "Authorization": "Bearer $Token"
     });

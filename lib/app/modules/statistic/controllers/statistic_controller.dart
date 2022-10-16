@@ -15,7 +15,7 @@ class StatisticController extends GetxController {
   DateTime now = DateTime.now();
   var Year = DateFormat('yyyy').format(DateTime.now()).toString();
 
-  var GetListWeekMonth = [].obs;
+  List<double> GetListWeekMonth = List<double>().obs;
   List<double> SumAmmountWeek = List<double>().obs;
 
   Map<String, List<dynamic>> temp = new Map<String, List<dynamic>>().obs;
@@ -99,7 +99,8 @@ class StatisticController extends GetxController {
   void getResponse() async {
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
-    var response = await NetworkHandler.get("gettransactionbybankaccountid/1");
+    var response =
+        await NetworkHandler.get("gettransactionbybankaccountid/$idUser");
     if (response.toString().contains('Session End')) {
       sessionHandlerFunction.ExpiredTokenRetryPolicy();
     } else {
@@ -119,8 +120,6 @@ class StatisticController extends GetxController {
         "Desember"
       ];
 
-      // print(result["data"]["WeekTotal"]["week 2 October 2022"]);
-
       for (var month in months) {
         temp2[month + " $Year"] = result["data"]["Month"][month + " $Year"];
         for (var i = 1; i < 7; i++) {
@@ -129,27 +128,35 @@ class StatisticController extends GetxController {
                   ["week " + i.toString() + " " + month + " $Year"]);
         }
       }
-
+      var WeekTotal = result["data"]["WeekTotal"];
       for (var i = 1; i < 7; i++) {
-        if (temp["week $i ${getMonth()} $Year"] == null) {
+        if (WeekTotal["week $i ${getMonth()} $Year"] != null) {
+          GetListWeekMonth.add(double.parse(
+              WeekTotal["week $i ${getMonth()} $Year"].toString()));
+        } else {
           GetListWeekMonth.add(0);
-        } else {
-          GetListWeekMonth.add(temp["week $i ${getMonth()} $Year"]);
         }
       }
-      double Amount = 0;
-      for (var i = 0; i < GetListWeekMonth.length; i++) {
-        for (var j = 0; j < GetListWeekMonth[1].length; j++) {
-          if (GetListWeekMonth[i] != 0) {
-            Amount += GetListWeekMonth[1][j]["Amount"];
-          }
-        }
-        if (GetListWeekMonth[i] != 0) {
-          SumAmmountWeek.add(Amount);
-        } else {
-          SumAmmountWeek.add(0);
-        }
-      }
+      // for (var i = 1; i < 7; i++) {
+      //   if (temp["week $i ${getMonth()} $Year"] == null) {
+      //     GetListWeekMonth.add(0);
+      //   } else {
+      //     GetListWeekMonth.add(temp["week $i ${getMonth()} $Year"]);
+      //   }
+      // }
+      // double Amount = 0;
+      // for (var i = 0; i < GetListWeekMonth.length; i++) {
+      //   for (var j = 0; j < GetListWeekMonth[2].length; j++) {
+      //     if (GetListWeekMonth[i] != 0) {
+      //       Amount += GetListWeekMonth[2][j]["Amount"];
+      //     }
+      //   }
+      //   if (GetListWeekMonth[i] != 0) {
+      //     SumAmmountWeek.add(Amount);
+      //   } else {
+      //     SumAmmountWeek.add(0);
+      //   }
+      // }
     }
   }
 }

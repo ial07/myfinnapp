@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "478361809893",
+    "project_id": "myfinnapps",
+    "storage_bucket": "myfinnapps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478361809893:android:afd62d488ab4245a5a750c",
+        "android_client_info": {
+          "package_name": "com.example.myfinnapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478361809893-rvqhgtbrhgh74kkmj73dl36goha0a4i2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLjHhJA0jpNNXg-aaqVFCuiWOmUIOIYY4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478361809893-rvqhgtbrhgh74kkmj73dl36goha0a4i2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

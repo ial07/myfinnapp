@@ -82,7 +82,8 @@ class StatisticView extends GetView<StatisticController> {
                       SizedBox(height: 10),
                       CardStatistic(
                         valueChoose: controller.valueChoose.value,
-                        SumAmmountWeek: controller.SumAmmountWeek,
+                        // getMonthList: controller.GetListWeekMonth,
+                        getMonthList: [6.0, 7.0, 2.0, 5.0, 8.0, 2.0],
                       )
                     ],
                   ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:myfinnapp/app/models/AccountBankList.dart';
 import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/app/utils/SvgIcon.dart';
 
@@ -32,7 +33,6 @@ class CardBank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var f = NumberFormat("#,##0.00", "en_US");
-
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Column(
