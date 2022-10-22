@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:myfinnapp/app/models/AccountBankList.dart';
+import 'package:myfinnapp/app/modules/home/controllers/home_controller.dart';
 import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/app/utils/SvgIcon.dart';
 
@@ -33,6 +34,9 @@ class CardBank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var f = NumberFormat("#,##0.00", "en_US");
+
+    var staticC = Get.put(HomeController());
+
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Column(
@@ -179,7 +183,12 @@ class CardBank extends StatelessWidget {
                       ),
                       InkWell(
                         onTap: () {
-                          Get.toNamed(Routes.STATISTIC);
+                          isDebit
+                              ? Get.toNamed(Routes.STATISTIC,
+                                  arguments: staticC.listTransactionByAccountId)
+                              : Get.toNamed(Routes.STATIC_CREDIT,
+                                  arguments:
+                                      staticC.listTransactionByAccountId);
                         },
                         child: Container(
                             padding: EdgeInsets.all(4),

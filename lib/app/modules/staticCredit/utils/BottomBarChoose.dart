@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myfinnapp/app/modules/statistic/controllers/statistic_controller.dart';
+import 'package:myfinnapp/app/modules/staticCredit/controllers/static_credit_controller.dart';
 
 class BottomBarChoose extends StatelessWidget {
   final int valueChoose;
@@ -13,7 +12,7 @@ class BottomBarChoose extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final staticC = Get.put<StatisticController>(StatisticController());
+    final staticC = Get.put<StaticCreditController>(StaticCreditController());
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.27,

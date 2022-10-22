@@ -7,294 +7,31 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:myfinnapp/app/modules/statistic/controllers/statistic_controller.dart';
 import 'package:myfinnapp/app/modules/statistic/models/chartData.dart';
+import 'package:myfinnapp/app/modules/statistic/utils/chartDays.dart';
+import 'package:myfinnapp/app/modules/statistic/utils/chartMonthly.dart';
+import 'package:myfinnapp/app/modules/statistic/utils/chartWeekly.dart';
 
 class CardStatistic extends StatelessWidget {
-  final List<Color> availableColors = [
-    Colors.blue[300],
-    Colors.red[400],
-  ];
-
-  final List<double> valueStatic = [2, 2, 6, 4, 6, 7, 3];
-  final List<double> valueStaticMonth = [2.0, 2.0, 6.0, 4.0, 5.0, 7.0];
-  final List<double> valueStaticYearly = [3, 4, 10, 6, 4, 9, 5, 5, 7, 8, 2, 7];
-
-  double totalWeakly = 0;
-
   final int valueChoose;
-  List<double> getMonthList;
-  double largestMonth;
 
-  CardStatistic({this.valueChoose, this.getMonthList});
+  CardStatistic({this.valueChoose});
 
   @override
   Widget build(BuildContext context) {
-    largestMonth = getMonthList[0];
-    for (var i = 0; i < getMonthList.length; i++) {
-      if (getMonthList[i] > largestMonth) {
-        largestMonth = getMonthList[i];
-      }
-    }
-    print(largestMonth * 1.5 / 2);
     var f = NumberFormat("#,##0.00", "en_US");
-
-    // print(getMonthList);
-
-    for (var i = 0; i < valueStatic.length; i++) {
-      totalWeakly += valueStatic[i];
-    }
 
     final staticC = Get.put<StatisticController>(StatisticController());
 
-    var barChartWeekly = BarChart(
-      BarChartData(
-          barGroups: List.generate(valueStatic.length, (i) {
-            switch (i) {
-              case 0:
-                return makeGroupData(0, valueStatic[i],
-                    barColor: valueStatic[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 1:
-                return makeGroupData(1, valueStatic[i],
-                    barColor: valueStatic[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 2:
-                return makeGroupData(2, valueStatic[i],
-                    barColor: valueStatic[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 3:
-                return makeGroupData(3, valueStatic[i],
-                    barColor: valueStatic[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 4:
-                return makeGroupData(4, valueStatic[i],
-                    barColor: valueStatic[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 5:
-                return makeGroupData(5, valueStatic[i],
-                    barColor: valueStatic[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 6:
-                return makeGroupData(6, valueStatic[i],
-                    barColor: valueStatic[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              default:
-                return throw Error();
-            }
-          }),
-          alignment: BarChartAlignment.spaceEvenly,
-          borderData: FlBorderData(
-            show: false,
-          ),
-          titlesData: FlTitlesData(
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: bottomTitlesWeekly,
-                reservedSize: 42,
-              ),
-            ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: false,
-              ),
-            ),
-            topTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: false,
-              ),
-            ),
-            rightTitles: AxisTitles(
-              sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 28,
-                  interval: 1,
-                  getTitlesWidget: RightTitles),
-            ),
-          )),
-    );
-
-    var barChartMonthly = BarChart(
-      BarChartData(
-          barGroups: List.generate(getMonthList.length, (i) {
-            switch (i) {
-              case 0:
-                return makeGroupData(0, getMonthList[i],
-                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 1:
-                return makeGroupData(1, getMonthList[i],
-                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 2:
-                return makeGroupData(2, getMonthList[i],
-                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 3:
-                return makeGroupData(3, getMonthList[i],
-                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 4:
-                return makeGroupData(4, getMonthList[i],
-                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 5:
-                return makeGroupData(5, getMonthList[i],
-                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 6:
-                return makeGroupData(6, getMonthList[i],
-                    barColor: getMonthList[i] >= (largestMonth * 1.5) / 2
-                        ? availableColors[0]
-                        : availableColors[1]);
-              default:
-                return throw Error();
-            }
-          }),
-          alignment: BarChartAlignment.spaceEvenly,
-          borderData: FlBorderData(
-            show: false,
-          ),
-          titlesData: FlTitlesData(
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: bottomTitlesMonthly,
-                reservedSize: 42,
-              ),
-            ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: false,
-              ),
-            ),
-            topTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: false,
-              ),
-            ),
-            rightTitles: AxisTitles(
-              sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 28,
-                  interval: 1,
-                  getTitlesWidget: RightTitles),
-            ),
-          )),
-    );
-
-    var barChartYearly = BarChart(
-      BarChartData(
-          barGroups: List.generate(valueStaticYearly.length, (i) {
-            switch (i) {
-              case 0:
-                return makeGroupDataYearly(0, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 1:
-                return makeGroupDataYearly(1, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 2:
-                return makeGroupDataYearly(2, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 3:
-                return makeGroupDataYearly(3, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 4:
-                return makeGroupDataYearly(4, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 5:
-                return makeGroupDataYearly(5, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 6:
-                return makeGroupDataYearly(6, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 7:
-                return makeGroupDataYearly(7, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 8:
-                return makeGroupDataYearly(8, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 9:
-                return makeGroupDataYearly(9, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 10:
-                return makeGroupDataYearly(10, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-              case 11:
-                return makeGroupDataYearly(11, valueStaticYearly[i],
-                    barColor: valueStaticYearly[i] >= 5
-                        ? availableColors[0]
-                        : availableColors[1]);
-
-              default:
-                return throw Error();
-            }
-          }),
-          alignment: BarChartAlignment.spaceEvenly,
-          borderData: FlBorderData(
-            show: false,
-          ),
-          titlesData: FlTitlesData(
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: bottomTitlesYearly,
-                reservedSize: 42,
-              ),
-            ),
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: false,
-              ),
-            ),
-            topTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: false,
-              ),
-            ),
-            rightTitles: AxisTitles(
-              sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 28,
-                  interval: 1,
-                  getTitlesWidget: RightTitles),
-            ),
-          )),
-    );
+    var largestMonth;
+    if (staticC.getMonthTotal.isNotEmpty) {
+      largestMonth = staticC.getMonthTotal[0];
+      for (var i = 0; i < staticC.getMonthTotal.length; i++) {
+        if (staticC.getMonthTotal[i] > largestMonth) {
+          largestMonth = staticC.getMonthTotal[i];
+        }
+      }
+    }
+    print(largestMonth);
 
     return Padding(
       padding: const EdgeInsets.all(5),
@@ -318,176 +55,39 @@ class CardStatistic extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Rp. 13.000.000",
-                      style: GoogleFonts.amiri(
-                          fontSize: 17, fontWeight: FontWeight.bold)),
-                  Text("Spent Today Rp. 13.000.000",
-                      style: GoogleFonts.amiri(fontSize: 12)),
+                  Text(
+                    "Net balance",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 9,
+                        color: Color(0xff67727d)),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Rp. ${f.format(largestMonth)}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
                   SizedBox(height: 10),
                   Obx(() => AspectRatio(
-                        aspectRatio: 2,
-                        child: staticC.valueChoose == 1
-                            ? barChartWeekly
+                      aspectRatio: 2,
+                      child: BarChart(
+                        staticC.valueChoose == 1
+                            ? barChartWeeklys()
                             : staticC.valueChoose == 2
-                                ? valueStaticMonth.length > 0
-                                    ? barChartMonthly
-                                    : Container()
-                                : staticC.valueChoose == 3
-                                    ? barChartYearly
-                                    : barChartWeekly,
-                      )),
+                                ? barChartMonthlys()
+                                : barChartWeeklys(),
+                      ))),
                 ],
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget RightTitles(double value, TitleMeta meta) {
-    var style = TextStyle(
-      color: Colors.blue[300],
-      fontWeight: FontWeight.bold,
-      fontSize: 8,
-    );
-    String text;
-    // print(totalWeakly);
-    if (value == 0) {
-      text = '1K';
-    } else if (value == ((largestMonth * 1.5) / 2)) {
-      text = 'ETS ${((largestMonth * 1.5) / 2).toString()}K';
-    } else if (value == largestMonth * 1.5) {
-      text = '${(largestMonth * 1.5).toString()}K';
-    } else {
-      return Container();
-    }
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 0,
-      child: Text(text, style: style),
-    );
-  }
-
-  Widget bottomTitlesWeekly(double value, TitleMeta meta) {
-    List<String> titles = ["Mn", "Te", "Wd", "Tu", "Fr", "St", "Su"];
-
-    Widget text = Text(
-      titles[value.toInt()],
-      style: TextStyle(
-        color: Colors.blue[300],
-        fontWeight: FontWeight.bold,
-        fontSize: 12,
-      ),
-    );
-
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 16, //margin top
-      child: text,
-    );
-  }
-
-  Widget bottomTitlesMonthly(double value, TitleMeta meta) {
-    List<String> titles = ["W1", "W2", "W3", "W4", "W5", "W6"];
-
-    Widget text = Text(
-      titles[value.toInt()],
-      style: TextStyle(
-        color: Colors.blue[300],
-        fontWeight: FontWeight.bold,
-        fontSize: 12,
-      ),
-    );
-
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 16, //margin top
-      child: text,
-    );
-  }
-
-  Widget bottomTitlesYearly(double value, TitleMeta meta) {
-    List<String> titles = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Agt",
-      "Sep",
-      "Okt",
-      "Nov",
-      "Dec"
-    ];
-
-    Widget text = Text(
-      titles[value.toInt()],
-      style: TextStyle(
-        color: Colors.blue[300],
-        fontWeight: FontWeight.bold,
-        fontSize: 8,
-      ),
-    );
-
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 10, //margin top
-      child: text,
-    );
-  }
-
-  BarChartGroupData makeGroupData(
-    int x,
-    double y, {
-    Color barColor = Colors.white,
-    double width = 22,
-    List<int> showTooltips = const [],
-  }) {
-    return BarChartGroupData(
-      x: x,
-      barRods: [
-        BarChartRodData(
-          toY: y,
-          color: barColor,
-          width: width,
-          borderSide: const BorderSide(color: Colors.white, width: 0),
-          backDrawRodData: BackgroundBarChartRodData(
-            show: true,
-            toY: largestMonth * 1.5,
-            color: Colors.grey.shade200,
-          ),
-        ),
-      ],
-      showingTooltipIndicators: showTooltips,
-    );
-  }
-
-  BarChartGroupData makeGroupDataYearly(
-    int x,
-    double y, {
-    Color barColor = Colors.white,
-    double width = 15,
-    List<int> showTooltips = const [],
-  }) {
-    return BarChartGroupData(
-      x: x,
-      barRods: [
-        BarChartRodData(
-          toY: y,
-          color: barColor,
-          width: width,
-          borderSide: const BorderSide(color: Colors.white, width: 0),
-          backDrawRodData: BackgroundBarChartRodData(
-            show: true,
-            toY: largestMonth * 1.5,
-            color: Colors.grey.shade200,
-          ),
-        ),
-      ],
-      showingTooltipIndicators: showTooltips,
     );
   }
 }

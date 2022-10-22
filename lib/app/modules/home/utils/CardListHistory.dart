@@ -54,7 +54,7 @@ class CardListHistory extends StatelessWidget {
                       ),
                       child: Icon(
                         Icons.monetization_on_outlined,
-                        color: Colors.black54,
+                        color: Colors.grey.withOpacity(0.7),
                       )),
                   SizedBox(width: 15),
                   // Center Item

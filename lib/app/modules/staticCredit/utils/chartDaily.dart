@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 List<Color> gradientColors = [Colors.blue[300]];
 
-LineChartData mainData() {
+LineChartData mainDataDaily() {
   return LineChartData(
     gridData: FlGridData(
         show: true,
         drawHorizontalLine: true,
+        drawVerticalLine: true,
         getDrawingHorizontalLine: (value) {
           return FlLine(
             color: const Color(0xff37434d),
@@ -43,15 +44,20 @@ LineChartData mainData() {
       show: false,
     ),
     minX: 0,
-    maxX: 11,
+    maxX: 10,
     minY: 0,
-    maxY: 6,
+    maxY: 10,
     lineBarsData: [
       LineChartBarData(
         spots: [
-          FlSpot(0, 3),
-          FlSpot(5, 7.1),
-          FlSpot(10, 3),
+          FlSpot(0, 0),
+          FlSpot(1, 7.1),
+          FlSpot(2, 5),
+          FlSpot(3, 3),
+          FlSpot(4, 5),
+          FlSpot(5, 7),
+          FlSpot(6, 3),
+          FlSpot(7, 2),
         ],
         isCurved: true,
         barWidth: 2,
@@ -72,14 +78,26 @@ Widget bottomTitleWidgets(double value, TitleMeta meta) {
   );
   Widget text;
   switch (value.toInt()) {
+    case 1:
+      text = const Text('Sun', style: style);
+      break;
     case 2:
-      text = const Text('MAR', style: style);
+      text = const Text('Mon', style: style);
+      break;
+    case 3:
+      text = const Text('Tue', style: style);
+      break;
+    case 4:
+      text = const Text('Wed', style: style);
       break;
     case 5:
-      text = const Text('JUN', style: style);
+      text = const Text('Thu', style: style);
       break;
-    case 8:
-      text = const Text('SEP', style: style);
+    case 6:
+      text = const Text('Fri', style: style);
+      break;
+    case 7:
+      text = const Text('Sat', style: style);
       break;
     default:
       text = const Text('', style: style);
@@ -103,10 +121,10 @@ Widget leftTitleWidgets(double value, TitleMeta meta) {
     case 1:
       text = '10K';
       break;
-    case 3:
+    case 5:
       text = '30k';
       break;
-    case 5:
+    case 10:
       text = '50k';
       break;
     default:

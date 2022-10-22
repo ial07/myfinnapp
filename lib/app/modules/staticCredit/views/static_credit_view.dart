@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myfinnapp/app/modules/staticCredit/utils/staticModel.dart';
-import 'package:myfinnapp/app/modules/staticCredit/utils/chart.dart';
+import 'package:intl/intl.dart';
+import 'package:myfinnapp/app/modules/staticCredit/utils/chartMonthly.dart';
+import 'package:myfinnapp/app/modules/staticCredit/utils/chartWeekly.dart';
+import 'package:myfinnapp/app/modules/staticCredit/utils/BottomBarChoose.dart';
+import 'package:myfinnapp/app/modules/staticCredit/utils/listMonthly.dart';
+import 'package:myfinnapp/app/modules/staticCredit/utils/listTransactionMonth.dart';
+import 'package:myfinnapp/app/modules/staticCredit/utils/listTransactionWeek.dart';
+import 'package:myfinnapp/app/modules/staticCredit/utils/listWeekly.dart';
 import 'package:myfinnapp/app/utils/Iconback.dart';
 import '../../../utils/color.dart' as color;
 
@@ -14,8 +20,16 @@ class StaticCreditView extends GetView<StaticCreditController> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
-    print(controller.activeDay);
+    var f = NumberFormat("#,##0.00", "en_US");
+    var largestMonth;
+    if (controller.getMonthTotal.isNotEmpty) {
+      largestMonth = controller.getMonthTotal[0];
+      for (var i = 0; i < controller.getMonthTotal.length; i++) {
+        if (controller.getMonthTotal[i] > largestMonth) {
+          largestMonth = controller.getMonthTotal[i];
+        }
+      }
+    }
     return Scaffold(
       backgroundColor: color.AppColor.PageBackground,
       body: Padding(
@@ -28,7 +42,7 @@ class StaticCreditView extends GetView<StaticCreditController> {
             SliverAppBar(
               automaticallyImplyLeading: false,
               pinned: true,
-              expandedHeight: size.height * 0.58,
+              expandedHeight: size.height * 0.6,
               backgroundColor: color.AppColor.PageBackground,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
@@ -40,15 +54,15 @@ class StaticCreditView extends GetView<StaticCreditController> {
                         children: [
                           IconBack(),
                           InkWell(
-                            // onTap: () => Get.bottomSheet(
-                            //   BottomBarChoose(),
-                            //   barrierColor: Colors.black38,
-                            //   backgroundColor: Colors.white,
-                            //   shape: RoundedRectangleBorder(
-                            //     borderRadius: BorderRadius.vertical(
-                            //         top: Radius.circular(20)),
-                            //   ),
-                            // ),
+                            onTap: () => Get.bottomSheet(
+                              BottomBarChoose(),
+                              barrierColor: Colors.black38,
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20)),
+                              ),
+                            ),
                             child: Container(
                               padding: EdgeInsets.all(10),
                               decoration: BoxDecoration(
@@ -74,7 +88,7 @@ class StaticCreditView extends GetView<StaticCreditController> {
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: Container(
                           width: double.infinity,
-                          height: 200,
+                          height: size.height * 0.35,
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
@@ -109,7 +123,7 @@ class StaticCreditView extends GetView<StaticCreditController> {
                                         height: 10,
                                       ),
                                       Text(
-                                        "\$2446.90",
+                                        "Rp. ${f.format(largestMonth)}",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 18,
@@ -122,10 +136,14 @@ class StaticCreditView extends GetView<StaticCreditController> {
                                   bottom: 0,
                                   child: Container(
                                     width: (size.width - 20),
-                                    height: 150,
-                                    child: LineChart(
-                                      mainData(),
-                                    ),
+                                    height: size.height * 0.2,
+                                    child: Obx(() => LineChart(
+                                          controller.valueChoose == 1
+                                              ? mainDataWeekly()
+                                              : controller.valueChoose == 2
+                                                  ? mainDataMonthly()
+                                                  : mainDataWeekly(),
+                                        )),
                                   ),
                                 )
                               ],
@@ -133,108 +151,42 @@ class StaticCreditView extends GetView<StaticCreditController> {
                           ),
                         ),
                       ),
-                      Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: List.generate(days.length, (index) {
-                            return GestureDetector(
-                              onTap: () {
-                                controller.activeDay.value = index;
-                              },
-                              child: Container(
-                                width: (size.width - 40) / 7,
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      days[index]['label'],
-                                      style: TextStyle(fontSize: 10),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Obx(() => Container(
-                                          width: 30,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  controller.activeDay == index
-                                                      ? Colors.blue[300]
-                                                      : Colors.transparent,
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                  color: controller.activeDay ==
-                                                          index
-                                                      ? Colors.blue[300]
-                                                      : Colors.black
-                                                          .withOpacity(0.1))),
-                                          child: Center(
-                                            child: Text(
-                                              days[index]['day'],
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: controller.activeDay ==
-                                                          index
-                                                      ? Colors.white
-                                                      : Colors.black),
-                                            ),
-                                          ),
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            );
-                          })),
+                      Obx(() => controller.valueChoose == 1
+                          ? ListWeekly(
+                              controller: controller,
+                              size: size,
+                            )
+                          : controller.valueChoose == 2
+                              ? ListMonthly(
+                                  controller: controller,
+                                  size: size,
+                                )
+                              : ListWeekly(
+                                  controller: controller,
+                                  size: size,
+                                )),
+                      SizedBox(height: 10),
                       Obx(() => Text(
                             controller.valueChoose == 1
-                                ? "Days Exspenses"
+                                ? "Weeks Exspenses"
                                 : controller.valueChoose == 2
-                                    ? "Weeks Exspenses"
-                                    : controller.valueChoose == 3
-                                        ? "Months Exspenses"
-                                        : "Days Exspenses",
+                                    ? "Months Exspenses"
+                                    : "Weeks Exspenses",
                             style: GoogleFonts.montserrat(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                           )),
                       SizedBox(height: 10),
                     ],
                   ),
-                  preferredSize: Size.fromHeight(size.height * 0.4)),
+                  preferredSize: Size.fromHeight(size.height * 0.43)),
             ),
-            SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(top: 3, right: 10, left: 10),
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          offset: Offset(2, 4),
-                          blurRadius: 5,
-                          color: Colors.black.withOpacity(0.2))
-                    ],
-                  ),
-                  child: ListTile(
-                    leading: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: Colors.blue[50],
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Icon(Icons.send_and_archive)),
-                    title: Text("Ini Title",
-                        style: GoogleFonts.montserrat(
-                            fontSize: 12, fontWeight: FontWeight.bold)),
-                    subtitle: Text("6 transactions",
-                        style: GoogleFonts.montserrat(fontSize: 10)),
-                    trailing: Text("Rp. 23.000.000,00",
-                        style: GoogleFonts.montserrat(
-                            fontSize: 9, fontWeight: FontWeight.bold)),
-                  ),
-                ),
-              );
-            }, childCount: 7))
+            Obx(
+              () => controller.valueChoose == 1
+                  ? SliverListWeek()
+                  : controller.valueChoose == 2
+                      ? SliverListMonth()
+                      : SliverListWeek(),
+            ),
           ],
         ),
       ),

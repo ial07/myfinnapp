@@ -1,35 +1,168 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:myfinnapp/app/function/sessionHandlerFunction.dart';
-// import 'package:myfinnapp/app/models/GetListTRX.dart';
-import 'package:myfinnapp/service/network_handler.dart';
-import '../models/chartData.dart';
+import 'package:week_of_year/week_of_year.dart';
 
 class StatisticController extends GetxController {
-  final dataUser = GetStorage();
-  RxInt valueChoose = 0.obs;
-  DateTime now = DateTime.now();
-  var Year = DateFormat('yyyy').format(DateTime.now()).toString();
+  var month = DateFormat.MMM().format(DateTime.now());
+  var monthNum = DateFormat.M().format(DateTime.now());
+  var year = DateFormat.y().format(DateTime.now());
 
-  List<double> GetListWeekMonth = List<double>().obs;
-  List<double> SumAmmountWeek = List<double>().obs;
+  var listTransactionByAccountId = {}.obs;
+  var getWeekTransactions = [].obs;
+  List<double> getWeekTotal = List<double>().obs;
+  List<double> getMonthTotal = List<double>().obs;
+  List<double> getNormalizeWeekTransactions = List<double>().obs;
+  List<double> getNormalizeMonthTransactions = List<double>().obs;
+  var getMonthTransactions = [].obs;
 
-  Map<String, List<dynamic>> temp = new Map<String, List<dynamic>>().obs;
-  Map<String, List<dynamic>> temp2 = new Map<String, List<dynamic>>().obs;
+  var firstweekinMonth =
+      DateTime(DateTime.now().year, DateTime.now().month).weekOfYear;
+  var lastWeekinMonth = DateTime(DateTime.now().year, DateTime.now().month + 1)
+      .add(Duration(days: -1))
+      .weekOfYear;
+  var currWeekinMonth =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)
+          .weekOfYear;
 
-  @override
-  void onInit() {
-    getResponse();
+  List weeks = [].obs;
+  List Months = [].obs;
 
-    super.onInit();
+  String getMonthInitial(key) {
+    switch (key) {
+      case 1:
+        {
+          month = "Jan";
+        }
+        break;
+      case 2:
+        {
+          month = "Feb";
+        }
+        break;
+      case 3:
+        {
+          month = "Mar";
+        }
+        break;
+      case 4:
+        {
+          month = "Apr";
+        }
+        break;
+      case 5:
+        {
+          month = "May";
+        }
+        break;
+      case 6:
+        {
+          month = "Jun";
+        }
+        break;
+      case 7:
+        {
+          month = "Jul";
+        }
+        break;
+      case 8:
+        {
+          month = "Aug";
+        }
+        break;
+      case 9:
+        {
+          month = "Sep";
+        }
+        break;
+      case 10:
+        {
+          month = "Oct";
+        }
+        break;
+      case 11:
+        {
+          month = "Nov";
+        }
+        break;
+      case 12:
+        {
+          month = "Des";
+        }
+        break;
+    }
+    return month;
+  }
+
+  String fullMonthName(int key) {
+    switch (key) {
+      case 0:
+        {
+          month = "Januari";
+        }
+        break;
+      case 1:
+        {
+          month = "Februari";
+        }
+        break;
+      case 2:
+        {
+          month = "March";
+        }
+        break;
+      case 3:
+        {
+          month = "April";
+        }
+        break;
+      case 4:
+        {
+          month = "May";
+        }
+        break;
+      case 5:
+        {
+          month = "Juni";
+        }
+        break;
+      case 6:
+        {
+          month = "July";
+        }
+        break;
+      case 7:
+        {
+          month = "August";
+        }
+        break;
+      case 8:
+        {
+          month = "September";
+        }
+        break;
+      case 9:
+        {
+          month = "October";
+        }
+        break;
+      case 10:
+        {
+          month = "November";
+        }
+        break;
+      case 11:
+        {
+          month = "Desember";
+        }
+        break;
+    }
+    return month;
   }
 
   String getMonth() {
-    var m = DateFormat('MM').format(now);
+    var m = DateFormat('MM').format(DateTime.now());
     var month = "";
     switch (m) {
       case '01':
@@ -96,67 +229,130 @@ class StatisticController extends GetxController {
     return month;
   }
 
-  void getResponse() async {
-    Map<String, dynamic> data = dataUser.read("dataUser");
-    final idUser = data["profile"]["Id"];
-    var response =
-        await NetworkHandler.get("gettransactionbybankaccountid/$idUser");
-    if (response.toString().contains('Session End')) {
-      sessionHandlerFunction.ExpiredTokenRetryPolicy();
-    } else {
-      var result = json.decode(response);
-      var months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "Juni",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "Desember"
-      ];
+  RxInt valueChoose = 0.obs;
+  RxInt activeDay = 0.obs;
+  RxInt activeWeek = 0.obs;
+  RxInt activeMonth = 0.obs;
 
-      for (var month in months) {
-        temp2[month + " $Year"] = result["data"]["Month"][month + " $Year"];
-        for (var i = 1; i < 7; i++) {
-          temp["week " + i.toString() + " " + month + " $Year"] =
-              (result["data"]["Week"]
-                  ["week " + i.toString() + " " + month + " $Year"]);
-        }
+  void getWeekTotalList() {
+    var data = listTransactionByAccountId;
+    var weekLengthInMonth = lastWeekinMonth - firstweekinMonth;
+    getWeekTotal = [];
+    for (var i = 1; i < weekLengthInMonth + 2; i++) {
+      if (data["WeekTotal"]["week $i ${getMonth()} $year"] != null) {
+        getWeekTotal.add(double.parse(
+            data["WeekTotal"]["week $i ${getMonth()} $year"].toString()));
+      } else {
+        getWeekTotal.add(0);
       }
-      var WeekTotal = result["data"]["WeekTotal"];
-      for (var i = 1; i < 7; i++) {
-        if (WeekTotal["week $i ${getMonth()} $Year"] != null) {
-          GetListWeekMonth.add(double.parse(
-              WeekTotal["week $i ${getMonth()} $Year"].toString()));
-        } else {
-          GetListWeekMonth.add(0);
-        }
-      }
-      // for (var i = 1; i < 7; i++) {
-      //   if (temp["week $i ${getMonth()} $Year"] == null) {
-      //     GetListWeekMonth.add(0);
-      //   } else {
-      //     GetListWeekMonth.add(temp["week $i ${getMonth()} $Year"]);
-      //   }
-      // }
-      // double Amount = 0;
-      // for (var i = 0; i < GetListWeekMonth.length; i++) {
-      //   for (var j = 0; j < GetListWeekMonth[2].length; j++) {
-      //     if (GetListWeekMonth[i] != 0) {
-      //       Amount += GetListWeekMonth[2][j]["Amount"];
-      //     }
-      //   }
-      //   if (GetListWeekMonth[i] != 0) {
-      //     SumAmmountWeek.add(Amount);
-      //   } else {
-      //     SumAmmountWeek.add(0);
-      //   }
-      // }
     }
+  }
+
+  void getListTransactionOfWeek() {
+    getNormalizeWeekTransactions = [];
+    var data = listTransactionByAccountId["Week"]
+        ["week ${activeWeek} ${getMonth()} $year"];
+    if (data != null) {
+      getWeekTransactions.value = data;
+    } else {
+      getWeekTransactions.value = [];
+    }
+  }
+
+  void getNormalisasiTransactionOfWeek() {
+    getNormalizeWeekTransactions = [];
+    var data =
+        listTransactionByAccountId["WeekTotalNormalize"]["${getMonth()} $year"];
+    var weekLengthInMonth = lastWeekinMonth - firstweekinMonth;
+    if (data != null) {
+      for (var i = 1; i < weekLengthInMonth + 2; i++) {
+        if (data["week $i ${getMonth()} $year"] != null) {
+          getNormalizeWeekTransactions.add(
+              double.parse(data["week $i ${getMonth()} $year"].toString()));
+        } else {
+          getNormalizeWeekTransactions.add(0);
+        }
+      }
+    }
+  }
+
+  void getMonthTotalList() {
+    var data = listTransactionByAccountId;
+    getMonthTotal = [];
+    for (var i = 0; i < 12; i++) {
+      if (data["MonthTotal"]["${fullMonthName(i)} $year"] != null) {
+        getMonthTotal.add(double.parse(
+            data["MonthTotal"]["${fullMonthName(i)} $year"].toString()));
+      } else {
+        getMonthTotal.add(0);
+      }
+    }
+  }
+
+  void getListTransactionOfMonth() {
+    getNormalizeMonthTransactions = [];
+    var data = listTransactionByAccountId["Month"]
+        ["${fullMonthName(activeMonth.value)} $year"];
+    if (data != null) {
+      getMonthTransactions.value = data;
+    } else {
+      getMonthTransactions.value = [];
+    }
+  }
+
+  void getNormalisasiTransactionOfMonth() {
+    getNormalizeMonthTransactions = [];
+    var data = listTransactionByAccountId["MonthTotalNormalize"]["$year"];
+    if (data != null) {
+      for (var i = 0; i < 12; i++) {
+        if (data["${fullMonthName(i)} $year"] != null) {
+          getNormalizeMonthTransactions
+              .add(double.parse(data["${fullMonthName(i)} $year"].toString()));
+        } else {
+          getNormalizeMonthTransactions.add(0);
+        }
+      }
+    }
+  }
+
+  void initialWeek() {
+    var weekNow = currWeekinMonth - firstweekinMonth + 1;
+    activeWeek.value = weekNow;
+    var weekLengthInMonth = lastWeekinMonth - firstweekinMonth;
+    for (var i = 1; i < weekLengthInMonth + 2; i++) {
+      weeks.add({"label": "$month", "day": "Week ${i}"});
+    }
+  }
+
+  void initialMonth() {
+    activeMonth.value = int.parse(monthNum) - 1;
+    for (var i = 1; i < 13; i++) {
+      Months.add({"label": "$year", "day": "${getMonthInitial(i)}"});
+    }
+  }
+
+  @override
+  void onInit() {
+    getNormalizeWeekTransactions = [];
+    getNormalizeMonthTransactions = [];
+    listTransactionByAccountId = Get.arguments;
+    initialWeek();
+    initialMonth();
+    getListTransactionOfWeek();
+    getWeekTotalList();
+    getListTransactionOfMonth();
+    getMonthTotalList();
+    getNormalisasiTransactionOfWeek();
+    getNormalisasiTransactionOfMonth();
+    // dataChartWeekly();
+    // dataChartMonthly();
+    super.onInit();
+  }
+
+  @override
+  void dispose() {
+    getNormalizeMonthTransactions;
+    getNormalizeWeekTransactions;
+    super.dispose();
   }
 }

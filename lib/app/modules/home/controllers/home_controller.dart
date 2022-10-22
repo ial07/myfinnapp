@@ -1,26 +1,29 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:myfinnapp/app/models/AccountBankList.dart';
-import 'package:myfinnapp/app/routes/app_pages.dart';
+import 'package:myfinnapp/app/models/User.dart';
 import 'package:myfinnapp/service/network_handler.dart';
 import 'package:myfinnapp/app/function/sessionHandlerFunction.dart';
 
 class HomeController extends GetxController {
   final dataUser = GetStorage();
+  RxInt idUser = 0.obs;
   RxInt idBankAccount = 0.obs;
   RxBool isLoading = false.obs;
   DateTime now = DateTime.now();
   var Year = DateFormat('yyyy').format(DateTime.now()).toString();
+  var UserDatas = <DataUser>[].obs;
 
   RxInt TotalMonthExpenses = 0.obs;
 
   var getBankList = <BankAccount>[].obs;
+  var listTransactionByAccountId = {}.obs;
+
   var getTransactionsList = <Transaction>[].obs;
+  // var getTransactionsListTemp = [].obs;
 
   dynamic response = null.obs;
 
@@ -28,26 +31,47 @@ class HomeController extends GetxController {
   void onInit() {
     // getResponse();
     getAccountBank();
-
+    getUser();
     super.onInit();
   }
 
   @override
   void onReady() {
-    getExpenseMonth();
     getTransaction();
-
+    getExpenseMonth();
     super.onReady();
   }
 
+  // void getTransaction() async {
+  //   if (getTransactionsListTemp.isNotEmpty) {
+  //     for (var i = 0; i < getTransactionsListTemp.length; i++) {
+  //       if (getTransactionsListTemp[i]["BankAccount"]["Id"] ==
+  //           idBankAccount.value) {
+  //         if (getTransactionsListTemp[i]["BankAccount"] != null) {
+  //           getTransactionsList =
+  //               getTransactionsListTemp[i]["BankAccount"]["Transactions"];
+  //         }
+  //       }
+  //     }
+  //   }
+  //   print(getTransactionsList);
+  // }
+
   // void getResponse() async {
-  //   isLoading.value = true;
+  //   isLoading.value = false;
   //   Map<String, dynamic> data = dataUser.read("dataUser");
   //   final idUser = data["profile"]["Id"];
-  //   response =
+  //   var res =
   //       await NetworkHandler.get("getbankAccountbyaccountidowner/$idUser");
-
-  //   getTransaction(response);
+  //   if (res.toString().contains('Session End')) {
+  //     sessionHandlerFunction.ExpiredTokenRetryPolicy();
+  //   } else {
+  //     var data = jsonDecode(res);
+  //     if (data["data"].length > 0) {
+  //       getTransactionsListTemp.addAll(data["data"]);
+  //     }
+  //     getTransaction();
+  //   }
   // }
 
   void getTransaction() async {
@@ -197,6 +221,7 @@ class HomeController extends GetxController {
       var result = json.decode(response);
 
       if (result.toString().contains('Get Transaction Success')) {
+        listTransactionByAccountId.addAll(result["data"]);
         if (result["data"]["MonthTotal"]["${getMonth()} $Year"] != null) {
           TotalMonthExpenses.value =
               result["data"]["MonthTotal"]["${getMonth()} $Year"];
@@ -204,7 +229,21 @@ class HomeController extends GetxController {
           TotalMonthExpenses.value = 0;
         }
       }
-      print(TotalMonthExpenses.value);
+    }
+  }
+
+  void getUser() async {
+    Map<String, dynamic> data = dataUser.read("dataUser");
+    idUser.value = data["profile"]["Id"];
+    var response = await NetworkHandler.get("getuserbyid/$idUser");
+    User getDataUser = User.fromJson(jsonDecode(response));
+    for (var item in getDataUser.data) {
+      UserDatas.add(DataUser(
+          email: item.email,
+          id: item.id,
+          photo: item.photo,
+          telephone: item.telephone,
+          userName: item.userName));
     }
   }
 }
