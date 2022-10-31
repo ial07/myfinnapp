@@ -14,6 +14,7 @@ abstract class Routes {
   static const PROFILE_EDIT = _Paths.PROFILE_EDIT;
   static const CHANGE_PASSWORD = _Paths.CHANGE_PASSWORD;
   static const STATIC_CREDIT = _Paths.STATIC_CREDIT;
+  static const CONTACT_US = _Paths.CONTACT_US;
 }
 
 abstract class _Paths {
@@ -29,4 +30,5 @@ abstract class _Paths {
   static const PROFILE_EDIT = '/profile-edit';
   static const CHANGE_PASSWORD = '/change-password';
   static const STATIC_CREDIT = '/static-credit';
+  static const CONTACT_US = '/contact-us';
 }

@@ -30,7 +30,7 @@ class StatisticView extends GetView<StatisticController> {
             SliverAppBar(
               automaticallyImplyLeading: false,
               pinned: true,
-              expandedHeight: size.height * 0.72,
+              expandedHeight: size.height * 0.62,
               backgroundColor: color.AppColor.PageBackground,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
@@ -113,7 +113,7 @@ class StatisticView extends GetView<StatisticController> {
                       SizedBox(height: 10),
                     ],
                   ),
-                  preferredSize: Size.fromHeight(size.height * 0.43)),
+                  preferredSize: Size.fromHeight(size.height * 0.53)),
             ),
             Obx(
               () => controller.valueChoose == 1

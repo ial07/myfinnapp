@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myfinnapp/app/modules/home/utils/CardBank.dart';
 import 'package:myfinnapp/app/modules/home/utils/CardListHistory.dart';
@@ -29,23 +28,16 @@ class HomeView extends GetView<HomeController> {
               expandedHeight: size.height * 0.5,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
-                  padding: const EdgeInsets.only(top: 40, right: 10),
+                  padding: EdgeInsets.only(top: size.height * 0.05, right: 10),
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InkWell(
-                            onTap: () {
-                              GetStorage().erase();
-                              Get.offAllNamed(Routes.START_PAGE);
-                            },
-                            child: Icon(
-                              Icons.square,
-                              size: 40,
-                              color: Colors.black,
-                            ),
-                          ),
+                          Container(
+                              height: 50,
+                              width: 50,
+                              child: Image.asset('assets/logo.png')),
                           Center(
                             child: CircleAvatar(
                               radius: 20,
@@ -57,7 +49,7 @@ class HomeView extends GetView<HomeController> {
                                       ? controller.UserDatas[0].photo.isNotEmpty
                                           ? controller.UserDatas[0].photo
                                           : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=${controller.UserDatas[0].email}"
-                                      : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=MY"))),
+                                      : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=F"))),
                             ),
                           ),
                         ],
@@ -109,61 +101,196 @@ class HomeView extends GetView<HomeController> {
                         ],
                       ),
                       SizedBox(height: 15),
-                      Obx(() => controller.getBankList.isEmpty
-                          ?
+                      Obx(
+                        () => controller.getBankList.isEmpty
+                            ?
 
-                          /// Card Wellcome MyFinnApps
-                          CardWelcome()
-                          :
+                            /// Card Wellcome MyFinnApps
+                            CardWelcome()
+                            :
+                            // FlipCard(
+                            //     front: SizedBox(
+                            //       child: Container(
+                            //         height: size.height * 0.3,
+                            //         child: PageView.builder(
+                            //             controller: _controller,
+                            //             onPageChanged: (val) =>
+                            //                 controller.idBankAccount.value,
+                            //             scrollDirection: Axis.horizontal,
+                            //             itemCount:
+                            //                 controller.getBankList.length,
+                            //             itemBuilder: (context, index) {
+                            //               // controller.idBankAccount.value =
+                            //               //     controller.getBankList[index].id;
+                            //               // controller.getTransaction();
+                            //               // controller.getExpenseMonth();
+                            //               var colors = controller
+                            //                   .getBankList[index].bank.color;
+                            //               var colorresult;
+                            //               if (colors != "null") {
+                            //                 colors = controller
+                            //                     .getBankList[index].bank.color;
+                            //               } else {
+                            //                 colors = '0x00000;0x2c3e50';
+                            //               }
+                            //               colorresult = colors.split(';');
+                            //               return Obx(() => CardBank(
+                            //                     id: controller
+                            //                         .getBankList[index].id,
+                            //                     TotalMonthDebit: controller
+                            //                         .TotalMonthdDebit.value,
+                            //                     TotalMonthExpenses: controller
+                            //                         .TotalMonthExpenses.value,
+                            //                     NamaBank: controller
+                            //                         .getBankList[index]
+                            //                         .bank
+                            //                         .name,
+                            //                     Amount: "0",
+                            //                     Type: controller
+                            //                         .getBankList[index]
+                            //                         .userAccount
+                            //                         .accountName
+                            //                         .toString(),
+                            //                     Note: controller
+                            //                         .getBankList[index].notes,
+                            //                     Color1:
+                            //                         int.parse(colorresult[0]),
+                            //                     Color2:
+                            //                         int.parse(colorresult[1]),
+                            //                     isDebit: false,
+                            //                     ExpectedDate: controller
+                            //                         .getBankList[index]
+                            //                         .expiredDate,
+                            //                     EstimatedSaving: controller
+                            //                         .getMonthEstimated.value,
+                            //                   ));
+                            //             }),
+                            //       ),
+                            //     ),
+                            //     back: SizedBox(
+                            //       child: Container(
+                            //         height: size.height * 0.3,
+                            //         child: PageView.builder(
+                            //             controller: _controller,
+                            //             onPageChanged: (val) =>
+                            //                 controller.idBankAccount.value,
+                            //             scrollDirection: Axis.horizontal,
+                            //             itemCount:
+                            //                 controller.getBankList.length,
+                            //             itemBuilder: (context, index) {
+                            //               // controller.idBankAccount.value =
+                            //               //     controller.getBankList[index].id;
+                            //               // controller.getTransaction();
+                            //               // controller.getExpenseMonth();
+                            //               var colors = controller
+                            //                   .getBankList[index].bank.color;
+                            //               var colorresult;
+                            //               if (colors != "null") {
+                            //                 colors = controller
+                            //                     .getBankList[index].bank.color;
+                            //               } else {
+                            //                 colors = '0x00000;0x2c3e50';
+                            //               }
+                            //               colorresult = colors.split(';');
+                            //               return Obx(() => CardBank(
+                            //                     id: controller
+                            //                         .getBankList[index].id,
+                            //                     TotalMonthDebit: controller
+                            //                         .TotalMonthdDebit.value,
+                            //                     TotalMonthExpenses: controller
+                            //                         .TotalMonthExpenses.value,
+                            //                     NamaBank: controller
+                            //                         .getBankList[index]
+                            //                         .bank
+                            //                         .name,
+                            //                     Amount: controller
+                            //                         .getBankList[index].amount
+                            //                         .toString(),
+                            //                     Type: controller
+                            //                         .getBankList[index]
+                            //                         .userAccount
+                            //                         .accountName
+                            //                         .toString(),
+                            //                     Note: controller
+                            //                         .getBankList[index].notes,
+                            //                     Color1:
+                            //                         int.parse(colorresult[0]),
+                            //                     Color2:
+                            //                         int.parse(colorresult[1]),
+                            //                     isDebit: controller
+                            //                         .getBankList[index].isDebit,
+                            //                     ExpectedDate: controller
+                            //                         .getBankList[index]
+                            //                         .expiredDate,
+                            //                     EstimatedSaving: controller
+                            //                         .getMonthEstimated.value,
+                            //                   ));
+                            //             }),
+                            //       ),
+                            //     ),
+                            //     onFlip: () {
+                            //       controller.getTransaction();
+                            //       controller.getExpenseMonth();
+                            //     },
+                            //   ),
 
-                          /// Card Bank Account
-                          SizedBox(
-                              child: Container(
-                                height: size.height * 0.25,
-                                child: PageView.builder(
-                                    controller: _controller,
-                                    // onPageChanged: (val) =>
-                                    //     controller.getResponse(),
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: controller.getBankList.length,
-                                    itemBuilder: (context, index) {
-                                      controller.idBankAccount.value =
-                                          controller.getBankList[index].id;
-                                      controller.getExpenseMonth();
-                                      controller.getTransaction();
-                                      var colors = controller
-                                          .getBankList[index].bank.color;
-                                      var colorresult;
-                                      if (colors != "null") {
-                                        colors = controller
+                            /// Card Bank Account
+                            SizedBox(
+                                child: Container(
+                                  height: size.height * 0.3,
+                                  child: PageView.builder(
+                                      controller: _controller,
+                                      // onPageChanged: (val) =>
+                                      //     controller.getResponse(),
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: controller.getBankList.length,
+                                      itemBuilder: (context, index) {
+                                        controller.idBankAccount.value =
+                                            controller.getBankList[index].id;
+
+                                        controller.getTransaction();
+                                        controller.getExpenseMonth();
+                                        var colors = controller
                                             .getBankList[index].bank.color;
-                                      } else {
-                                        colors = '0x00000;0x2c3e50';
-                                      }
-                                      colorresult = colors.split(';');
-                                      return Obx(() => CardBank(
-                                            TotalMonthExpenses: controller
-                                                .TotalMonthExpenses.value,
-                                            NamaBank: controller
-                                                .getBankList[index].bank.name,
-                                            Amount: controller
-                                                .getBankList[index].amount
-                                                .toString(),
-                                            Type: controller.getBankList[index]
-                                                .userAccount.accountName
-                                                .toString(),
-                                            Note: controller
-                                                .getBankList[index].notes,
-                                            Color1: int.parse(colorresult[0]),
-                                            Color2: int.parse(colorresult[1]),
-                                            isDebit: controller
-                                                .getBankList[index].isDebit,
-                                            ExpectedDate: controller
-                                                .getBankList[index].expiredDate,
-                                          ));
-                                    }),
+                                        var colorresult;
+                                        if (colors != "null") {
+                                          colors = controller
+                                              .getBankList[index].bank.color;
+                                        } else {
+                                          colors = '0x00000;0x2c3e50';
+                                        }
+                                        colorresult = colors.split(';');
+                                        return Obx(() => CardBank(
+                                              TotalMonthDebit: controller
+                                                  .TotalMonthdDebit.value,
+                                              TotalMonthExpenses: controller
+                                                  .TotalMonthExpenses.value,
+                                              NamaBank: controller
+                                                  .getBankList[index].bank.name,
+                                              Amount: controller
+                                                  .getBankList[index].amount
+                                                  .toString(),
+                                              Type: controller
+                                                  .getBankList[index]
+                                                  .userAccount
+                                                  .accountName
+                                                  .toString(),
+                                              Note: controller
+                                                  .getBankList[index].notes,
+                                              Color1: int.parse(colorresult[0]),
+                                              Color2: int.parse(colorresult[1]),
+                                              isDebit: controller
+                                                  .getBankList[index].isDebit,
+                                              ExpectedDate: controller
+                                                  .getBankList[index]
+                                                  .expiredDate,
+                                              EstimatedSaving: controller
+                                                  .getMonthEstimated.value,
+                                            ));
+                                      }),
+                                ),
                               ),
-                            )),
+                      ),
                       Obx(() => controller.getBankList.isNotEmpty
                           ? SmoothPageIndicator(
                               controller: _controller,
@@ -190,33 +317,35 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ],
                   ),
-                  preferredSize: Size.fromHeight(size.height * 0.33)),
+                  preferredSize: Size.fromHeight(size.height * 0.4)),
             ),
 
             // / list Transaction
 
-            Obx(() => controller.getTransactionsList.isNotEmpty
-                ? SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                    return CardListHistory(
-                      // Title: "Notes",
-                      SubTitle: controller.getTransactionsList[index].notes,
-                      Price: controller.getTransactionsList[index].amount
-                          .toString(),
-                      Date: controller.getTransactionsList[index].createdDate,
-                      isDebit: controller
-                          .getTransactionsList[index].bankAccount.isDebit,
-                    );
-                  }, childCount: controller.getTransactionsList.length))
-                : SliverList(
-                    delegate: SliverChildBuilderDelegate((context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 70),
-                      child: Center(
-                          child: Text("Transaction Not Found",
-                              style: GoogleFonts.montserrat())),
-                    );
-                  }, childCount: 1)))
+            Obx(
+              () => controller.getTransactionsList.isNotEmpty
+                  ? SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                      return CardListHistory(
+                        // Title: "Notes",
+                        SubTitle: controller.getTransactionsList[index].notes,
+                        Price: controller.getTransactionsList[index].amount
+                            .toString(),
+                        Date: controller.getTransactionsList[index].createdDate,
+                        isDebit: controller
+                            .getTransactionsList[index].bankAccount.isDebit,
+                      );
+                    }, childCount: controller.getTransactionsList.length))
+                  : SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 70),
+                        child: Center(
+                            child: Text("Transaction Not Found",
+                                style: GoogleFonts.montserrat())),
+                      );
+                    }, childCount: 1)),
+            )
           ],
         ),
       ),

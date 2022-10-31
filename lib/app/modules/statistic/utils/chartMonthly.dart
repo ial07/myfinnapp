@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfinnapp/app/modules/statistic/controllers/statistic_controller.dart';
 
-final staticC = Get.put<StatisticController>(StatisticController());
 var largestMonth;
 String TopText = "";
 String MidText = "";
 String BotText = "";
+int estimatedNormalize = 0;
 BarChartData barChartMonthlys() {
+  final staticC = Get.put<StatisticController>(StatisticController());
   final List<Color> availableColors = [
     Colors.blue[300],
     Colors.red[400],
@@ -24,15 +25,17 @@ BarChartData barChartMonthlys() {
     }
   }
 
+  estimatedNormalize = staticC.getMonthNormalizeEstimated.toInt();
+
   int count = 0;
   int count2 = 0;
   int count3 = 0;
 
   var Temp = largestMonth;
-  var Temp2 = largestMonth / 2;
+  var Temp2 = staticC.getMonthEstimated.toInt();
   var Temp3 = largestMonth / 9;
 
-  var middleWeek = largestMonth / 2;
+  var middleWeek = staticC.getMonthEstimated.toInt();
   var botWeek = largestMonth / 9;
   while (Temp > 0) {
     Temp = (Temp / 10).toInt();
@@ -85,73 +88,85 @@ BarChartData barChartMonthlys() {
                 staticC.getNormalizeMonthTransactions.isNotEmpty
                     ? staticC.getNormalizeMonthTransactions[i]
                     : 0,
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 1:
             return makeGroupDataMonthly(
                 1, staticC.getNormalizeMonthTransactions[i],
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 2:
             return makeGroupDataMonthly(
                 2, staticC.getNormalizeMonthTransactions[i],
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 3:
             return makeGroupDataMonthly(
                 3, staticC.getNormalizeMonthTransactions[i],
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 4:
             return makeGroupDataMonthly(
                 4, staticC.getNormalizeMonthTransactions[i],
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 5:
             return makeGroupDataMonthly(
                 5, staticC.getNormalizeMonthTransactions[i],
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 6:
             return makeGroupDataMonthly(
                 6, staticC.getNormalizeMonthTransactions[i],
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 7:
             return makeGroupDataMonthly(
                 7, staticC.getNormalizeMonthTransactions[i],
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 8:
             return makeGroupDataMonthly(
                 8, staticC.getNormalizeMonthTransactions[i],
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 9:
             return makeGroupDataMonthly(
                 9, staticC.getNormalizeMonthTransactions[i],
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 10:
             return makeGroupDataMonthly(
                 10, staticC.getNormalizeMonthTransactions[i],
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 11:
             return makeGroupDataMonthly(
                 11, staticC.getNormalizeMonthTransactions[i],
-                barColor: staticC.getNormalizeMonthTransactions[i] >= 5
+                barColor: staticC.getNormalizeMonthTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
 
@@ -207,11 +222,16 @@ Widget RightTitles(double value, TitleMeta meta) {
     fontWeight: FontWeight.bold,
     fontSize: 8,
   );
+  var styleEst = TextStyle(
+    color: Colors.red[300],
+    fontWeight: FontWeight.bold,
+    fontSize: 6,
+  );
   String text;
   if (value == 0) {
     text = BotText;
-  } else if (value == 5) {
-    text = MidText;
+  } else if (value == estimatedNormalize) {
+    text = MidText + " EST";
   } else if (value == 10) {
     text = TopText;
   } else {
@@ -220,7 +240,7 @@ Widget RightTitles(double value, TitleMeta meta) {
   return SideTitleWidget(
     axisSide: meta.axisSide,
     space: 0,
-    child: Text(text, style: style),
+    child: Text(text, style: value == estimatedNormalize ? styleEst : style),
   );
 }
 

@@ -25,6 +25,7 @@ class CreateTrxController extends GetxController {
     final dataUser = GetStorage();
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
+    var Amount = AmountC.text.replaceAll("Rp. ", "").replaceAll(".", "");
 
     if (idBankAccount.value.isGreaterThan(0) &&
         AmountC.text.isNotEmpty &&
@@ -33,12 +34,11 @@ class CreateTrxController extends GetxController {
 
       CreateTRXModel accountBankModel = CreateTRXModel(
           bankaccountid: idBankAccount.value,
-          Amount: double.parse(AmountC.text),
+          Amount: double.parse(Amount),
           Notes: NotesC.text);
       var response = await NetworkHandler.post(
           createTRXModelToJson(accountBankModel), "createtransaction");
       var data = json.decode(response);
-      print(data);
       if (data["meta"]["code"] == 200) {
         isLoading.value = false;
 

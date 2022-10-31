@@ -34,9 +34,17 @@ class BottomBarChoose extends StatelessWidget {
               leading: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: Colors.blue[300],
+                    color: staticC.valueChoose.value == 0
+                        ? Colors.blue[300]
+                        : staticC.valueChoose.value == 1
+                            ? Colors.blue[300]
+                            : Colors.blue[50],
                     borderRadius: BorderRadius.circular(50)),
-                child: Icon(Icons.check, color: Colors.white),
+                child: staticC.valueChoose.value == 0
+                    ? Icon(Icons.check, color: Colors.white)
+                    : staticC.valueChoose.value == 1
+                        ? Icon(Icons.check, color: Colors.white)
+                        : Icon(Icons.calendar_month),
               ),
               title: Text("Weekly", style: GoogleFonts.montserrat()),
             ),
@@ -50,9 +58,13 @@ class BottomBarChoose extends StatelessWidget {
               leading: Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: Colors.blue[50],
+                    color: staticC.valueChoose.value == 2
+                        ? Colors.blue[300]
+                        : Colors.blue[50],
                     borderRadius: BorderRadius.circular(50)),
-                child: Icon(Icons.calendar_month),
+                child: staticC.valueChoose.value == 2
+                    ? Icon(Icons.check, color: Colors.white)
+                    : Icon(Icons.calendar_month),
               ),
               title: Text("Monthly", style: GoogleFonts.montserrat()),
             ),

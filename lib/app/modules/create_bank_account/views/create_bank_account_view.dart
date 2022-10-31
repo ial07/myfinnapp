@@ -11,6 +11,7 @@ import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/app/utils/Iconback.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:myfinnapp/app/utils/InputForm.dart';
+import 'package:myfinnapp/app/utils/InputFormCurrency.dart';
 import 'package:myfinnapp/app/utils/InputFormNumber.dart';
 import '../controllers/create_bank_account_controller.dart';
 
@@ -238,7 +239,7 @@ class CreateBankAccountView extends GetView<CreateBankAccountController> {
                     ? Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          InputFormNumber(
+                          InputFormCurrency(
                               Title: "Expected Amount",
                               HintText: "Type expected amount",
                               Controller: controller.AmountC),
@@ -272,7 +273,7 @@ class CreateBankAccountView extends GetView<CreateBankAccountController> {
                           ),
                         ],
                       )
-                    : InputFormNumber(
+                    : InputFormCurrency(
                         Title: "Amount",
                         HintText: "Type amount",
                         Controller: controller.AmountC),

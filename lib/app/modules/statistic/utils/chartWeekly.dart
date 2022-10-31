@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfinnapp/app/modules/statistic/controllers/statistic_controller.dart';
 
-final staticC = Get.put(StatisticController());
 var largestWeek;
 String TopText = "";
 String MidText = "";
 String BotText = "";
+int estimatedNormalize = 0;
 BarChartData barChartWeeklys() {
+  final staticC = Get.put(StatisticController());
   final List<Color> availableColors = [
     Colors.blue[300],
     Colors.red[400],
@@ -23,15 +24,17 @@ BarChartData barChartWeeklys() {
     }
   }
 
+  estimatedNormalize = (staticC.getWeekNormalizeEstimated).toInt();
+
   int count = 0;
   int count2 = 0;
   int count3 = 0;
 
   var Temp = largestWeek;
-  var Temp2 = largestWeek / 2;
+  var Temp2 = staticC.getWeekEstimated.value.toInt();
   var Temp3 = largestWeek / 9;
 
-  var middleWeek = largestWeek / 2;
+  var middleWeek = staticC.getWeekEstimated.value.toInt();
   var botWeek = largestWeek / 9;
   while (Temp > 0) {
     Temp = (Temp / 10).toInt();
@@ -84,43 +87,50 @@ BarChartData barChartWeeklys() {
                 staticC.getNormalizeWeekTransactions.isNotEmpty
                     ? staticC.getNormalizeWeekTransactions[i]
                     : 0,
-                barColor: staticC.getNormalizeWeekTransactions[i] >= 5
+                barColor: staticC.getNormalizeWeekTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 1:
             return makeGroupDataWeekls(
                 1, staticC.getNormalizeWeekTransactions[i],
-                barColor: staticC.getNormalizeWeekTransactions[i] >= 5
+                barColor: staticC.getNormalizeWeekTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 2:
             return makeGroupDataWeekls(
                 2, staticC.getNormalizeWeekTransactions[i],
-                barColor: staticC.getNormalizeWeekTransactions[i] >= 5
+                barColor: staticC.getNormalizeWeekTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 3:
             return makeGroupDataWeekls(
                 3, staticC.getNormalizeWeekTransactions[i],
-                barColor: staticC.getNormalizeWeekTransactions[i] >= 5
+                barColor: staticC.getNormalizeWeekTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 4:
             return makeGroupDataWeekls(
                 4, staticC.getNormalizeWeekTransactions[i],
-                barColor: staticC.getNormalizeWeekTransactions[i] >= 5
+                barColor: staticC.getNormalizeWeekTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 5:
             return makeGroupDataWeekls(
                 5, staticC.getNormalizeWeekTransactions[i],
-                barColor: staticC.getNormalizeWeekTransactions[i] >= 5
+                barColor: staticC.getNormalizeWeekTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           case 6:
             return makeGroupDataWeekls(
                 6, staticC.getNormalizeWeekTransactions[i],
-                barColor: staticC.getNormalizeWeekTransactions[i] >= 5
+                barColor: staticC.getNormalizeWeekTransactions[i] >=
+                        estimatedNormalize
                     ? availableColors[0]
                     : availableColors[1]);
           default:
@@ -175,11 +185,16 @@ Widget RightTitles(double value, TitleMeta meta) {
     fontWeight: FontWeight.bold,
     fontSize: 8,
   );
+  var styleEst = TextStyle(
+    color: Colors.red[300],
+    fontWeight: FontWeight.bold,
+    fontSize: 6,
+  );
   String text;
   if (value == 0) {
     text = BotText;
-  } else if (value == 5) {
-    text = MidText;
+  } else if (value == estimatedNormalize) {
+    text = MidText + " EST";
   } else if (value == 10) {
     text = TopText;
   } else {
@@ -188,7 +203,7 @@ Widget RightTitles(double value, TitleMeta meta) {
   return SideTitleWidget(
     axisSide: meta.axisSide,
     space: 0,
-    child: Text(text, style: style),
+    child: Text(text, style: value == estimatedNormalize ? styleEst : style),
   );
 }
 

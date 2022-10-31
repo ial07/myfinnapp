@@ -31,7 +31,6 @@ class CardStatistic extends StatelessWidget {
         }
       }
     }
-    print(largestMonth);
 
     return Padding(
       padding: const EdgeInsets.all(5),

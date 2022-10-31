@@ -191,6 +191,9 @@ class BankAccount {
         "DeletedBy": deletedBy,
         "DeletedDate": deletedDate.toIso8601String(),
       };
+
+  @override
+  String toString() => bank.name;
 }
 
 enum CreatedBy { EMPTY, IAL07 }

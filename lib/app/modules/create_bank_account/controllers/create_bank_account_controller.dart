@@ -66,6 +66,7 @@ class CreateBankAccountController extends GetxController {
     final dataUser = GetStorage();
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
+    var Amount = AmountC.text.replaceAll("Rp. ", "").replaceAll(".", "");
     String newDate;
 
     if (dateC.text.isNotEmpty) {
@@ -82,7 +83,7 @@ class CreateBankAccountController extends GetxController {
 
       CreateBankAccountModel accountBankModel = CreateBankAccountModel(
           AccountIdOwner: idUser,
-          Amount: double.parse(AmountC.text),
+          Amount: double.parse(Amount),
           UserAccountId: idAccount.value,
           BankCode: CodeBank.value,
           Notes: NotesC.text,

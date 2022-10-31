@@ -2,6 +2,7 @@ import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/app/utils/BottomBar.dart';
@@ -24,16 +25,19 @@ class ProfilePageView extends GetView<ProfilePageController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(Icons.fingerprint_sharp),
-                Badge(
-                  badgeContent: Text(
-                    '3',
-                    style: GoogleFonts.montserrat(color: Colors.white),
-                  ),
-                  child: InkWell(
-                      // onTap: () => controller.getUser(),
-                      child: Icon(Icons.notifications)),
-                )
+                Container(
+                    height: 50,
+                    width: 50,
+                    child: Image.asset('assets/logo.png')),
+                // Badge(
+                //   badgeContent: Text(
+                //     '3',
+                //     style: GoogleFonts.montserrat(color: Colors.white),
+                //   ),
+                //   child: InkWell(
+                //       // onTap: () => controller.getUser(),
+                //       child: Icon(Icons.notifications)),
+                // )
               ],
             ),
             SizedBox(height: 30),
@@ -51,7 +55,7 @@ class ProfilePageView extends GetView<ProfilePageController> {
                             ? controller.UserDatas[0].photo.isNotEmpty
                                 ? controller.UserDatas[0].photo
                                 : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=${controller.UserDatas[0].email}"
-                            : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=MY"))),
+                            : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=F"))),
                   ),
                 ),
                 Positioned(
@@ -107,10 +111,15 @@ class ProfilePageView extends GetView<ProfilePageController> {
                         style: GoogleFonts.montserrat()),
                   ),
                   ListTile(
+                    onTap: () => Get.toNamed(Routes.CONTACT_US),
                     leading: Icon(Icons.phone_callback_rounded),
                     title: Text("Contact Us", style: GoogleFonts.montserrat()),
                   ),
                   ListTile(
+                    onTap: () {
+                      GetStorage().erase();
+                      Get.offAllNamed(Routes.START_PAGE);
+                    },
                     leading: Icon(Icons.logout_rounded),
                     title: Text("Logout", style: GoogleFonts.montserrat()),
                   ),

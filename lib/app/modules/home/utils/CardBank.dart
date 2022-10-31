@@ -17,7 +17,9 @@ class CardBank extends StatelessWidget {
   final int Color2;
   final bool isDebit;
   final DateTime ExpectedDate;
-  final int TotalMonthExpenses;
+  final double TotalMonthExpenses;
+  final double EstimatedSaving;
+  final double TotalMonthDebit;
 
   CardBank({
     this.NamaBank,
@@ -29,6 +31,8 @@ class CardBank extends StatelessWidget {
     this.isDebit,
     this.ExpectedDate,
     this.TotalMonthExpenses,
+    this.EstimatedSaving,
+    this.TotalMonthDebit,
   });
 
   @override
@@ -36,13 +40,13 @@ class CardBank extends StatelessWidget {
     var f = NumberFormat("#,##0.00", "en_US");
 
     var staticC = Get.put(HomeController());
-
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Column(
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.21,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -77,7 +81,7 @@ class CardBank extends StatelessWidget {
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)),
-                          isDebit ? SvgIcon.creditSVG : SvgIcon.debitSVG
+                          isDebit ? SvgIcon.debitSVG : SvgIcon.creditSVG
                         ],
                       ),
                       Row(
@@ -104,7 +108,7 @@ class CardBank extends StatelessWidget {
                                     Text("Current Amount",
                                         style: GoogleFonts.montserrat(
                                             fontSize: 10, color: Colors.white)),
-                                    Text("Rp ${f.format(int.parse(Amount))}",
+                                    Text("Rp ${f.format(TotalMonthDebit)}",
                                         style: GoogleFonts.montserrat(
                                             fontSize: 10,
                                             color: Colors.white,
@@ -118,7 +122,7 @@ class CardBank extends StatelessWidget {
                                     Text("Expected Amount",
                                         style: GoogleFonts.montserrat(
                                             fontSize: 10, color: Colors.white)),
-                                    Text("Rp.13,000,000",
+                                    Text("Rp. ${f.format(int.parse(Amount))}",
                                         style: GoogleFonts.montserrat(
                                             fontSize: 10,
                                             color: Colors.white,
@@ -141,11 +145,11 @@ class CardBank extends StatelessWidget {
                                 Text("estimated savings per month",
                                     style: GoogleFonts.montserrat(
                                         fontSize: 7, color: Colors.white)),
-                                Text("Rp.13,000,000",
+                                Text("Rp. ${f.format(EstimatedSaving)}",
                                     style: GoogleFonts.montserrat(
                                         fontSize: 7,
                                         color: Colors.white,
-                                        fontWeight: FontWeight.bold)),
+                                        fontWeight: FontWeight.bold))
                               ],
                             ),
                             Column(
@@ -181,29 +185,34 @@ class CardBank extends StatelessWidget {
                                   fontSize: 7, color: Colors.white)),
                         ],
                       ),
-                      InkWell(
-                        onTap: () {
-                          isDebit
-                              ? Get.toNamed(Routes.STATISTIC,
-                                  arguments: staticC.listTransactionByAccountId)
-                              : Get.toNamed(Routes.STATIC_CREDIT,
-                                  arguments:
-                                      staticC.listTransactionByAccountId);
-                        },
-                        child: Container(
-                            padding: EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                              boxShadow: [
-                                BoxShadow(
-                                    offset: Offset(2, 5),
-                                    blurRadius: 10,
-                                    color: Colors.black.withOpacity(0.3))
-                              ],
-                            ),
-                            child: Icon(Icons.query_stats_rounded, size: 22)),
-                      ),
+                      Obx(() => staticC.TotalMonthdDebit.value != 0 &&
+                              staticC.listTransactionByAccountId.isNotEmpty
+                          ? InkWell(
+                              onTap: () {
+                                isDebit
+                                    ? Get.toNamed(Routes.STATISTIC,
+                                        arguments:
+                                            staticC.listTransactionByAccountId)
+                                    : Get.toNamed(Routes.STATIC_CREDIT,
+                                        arguments:
+                                            staticC.listTransactionByAccountId);
+                              },
+                              child: Container(
+                                  padding: EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: Offset(2, 5),
+                                          blurRadius: 10,
+                                          color: Colors.black.withOpacity(0.3))
+                                    ],
+                                  ),
+                                  child: Icon(Icons.query_stats_rounded,
+                                      size: 22)),
+                            )
+                          : Text("")),
                     ],
                   ),
                 ],

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_launcher_icons/utils.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
@@ -13,22 +14,26 @@ class HomeController extends GetxController {
   RxInt idUser = 0.obs;
   RxInt idBankAccount = 0.obs;
   RxBool isLoading = false.obs;
+  RxDouble getMonthEstimated = 0.0.obs;
   DateTime now = DateTime.now();
   var Year = DateFormat('yyyy').format(DateTime.now()).toString();
   var UserDatas = <DataUser>[].obs;
 
-  RxInt TotalMonthExpenses = 0.obs;
+  RxDouble TotalMonthExpenses = 0.0.obs;
+  RxDouble TotalMonthdDebit = 0.0.obs;
 
   var getBankList = <BankAccount>[].obs;
   var listTransactionByAccountId = {}.obs;
 
   var getTransactionsList = <Transaction>[].obs;
-  // var getTransactionsListTemp = [].obs;
+  // var getTransactionsList = [].obs;
+  var getTransactionsListTemp = [].obs;
 
   dynamic response = null.obs;
 
   @override
   void onInit() {
+    listTransactionByAccountId.value = {};
     // getResponse();
     getAccountBank();
     getUser();
@@ -43,18 +48,17 @@ class HomeController extends GetxController {
   }
 
   // void getTransaction() async {
+  //   getTransactionsList.value = [];
   //   if (getTransactionsListTemp.isNotEmpty) {
   //     for (var i = 0; i < getTransactionsListTemp.length; i++) {
-  //       if (getTransactionsListTemp[i]["BankAccount"]["Id"] ==
-  //           idBankAccount.value) {
-  //         if (getTransactionsListTemp[i]["BankAccount"] != null) {
-  //           getTransactionsList =
-  //               getTransactionsListTemp[i]["BankAccount"]["Transactions"];
+  //       var data = getTransactionsListTemp[i]["BankAccount"];
+  //       if (data != null) {
+  //         if (data["Id"] == idBankAccount.value) {
+  //           getTransactionsList.value = data["Transactions"];
   //         }
   //       }
   //     }
   //   }
-  //   print(getTransactionsList);
   // }
 
   // void getResponse() async {
@@ -70,11 +74,12 @@ class HomeController extends GetxController {
   //     if (data["data"].length > 0) {
   //       getTransactionsListTemp.addAll(data["data"]);
   //     }
-  //     getTransaction();
+  //     // getTransaction();
   //   }
   // }
 
   void getTransaction() async {
+    listTransactionByAccountId.value = {};
     isLoading.value = false;
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
@@ -90,6 +95,8 @@ class HomeController extends GetxController {
       getTransactionsList.removeRange(0, getTransactionsList.length);
 
       if (items.isNotEmpty) {
+        TotalMonthdDebit.value =
+            double.parse(items.first.transactionTotal.toString());
         for (var item in items.first.bankAccount.transactions) {
           getTransactionsList.add(Transaction(
               id: item.id,
@@ -213,20 +220,24 @@ class HomeController extends GetxController {
   void getExpenseMonth() async {
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
-    var response = await NetworkHandler.get(
-        "gettransactionbybankaccountid/${idBankAccount.value}");
-    if (response.toString().contains('Session End')) {
-      sessionHandlerFunction.ExpiredTokenRetryPolicy();
-    } else {
-      var result = json.decode(response);
-
-      if (result.toString().contains('Get Transaction Success')) {
-        listTransactionByAccountId.addAll(result["data"]);
-        if (result["data"]["MonthTotal"]["${getMonth()} $Year"] != null) {
-          TotalMonthExpenses.value =
-              result["data"]["MonthTotal"]["${getMonth()} $Year"];
-        } else {
-          TotalMonthExpenses.value = 0;
+    getMonthEstimated.value = 0.0;
+    if (idBankAccount.value != 0) {
+      var response = await NetworkHandler.get(
+          "gettransactionbybankaccountid/${idBankAccount.value}");
+      if (response.toString().contains('Session End')) {
+        sessionHandlerFunction.ExpiredTokenRetryPolicy();
+      } else {
+        var result = json.decode(response);
+        if (result.toString().contains('Get Transaction Success')) {
+          listTransactionByAccountId.addAll(result["data"]);
+          getMonthEstimated.value =
+              double.parse(result["data"]["MonthEstimate"].toString());
+          if (result["data"]["MonthTotal"]["${getMonth()} $Year"] != null) {
+            TotalMonthExpenses.value = double.parse(
+                result["data"]["MonthTotal"]["${getMonth()} $Year"].toString());
+          } else {
+            TotalMonthExpenses.value = 0.0;
+          }
         }
       }
     }

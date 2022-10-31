@@ -7,6 +7,7 @@ import 'package:myfinnapp/app/models/AccountBankList.dart';
 import 'package:myfinnapp/app/utils/BottomBar.dart';
 import 'package:myfinnapp/app/utils/Iconback.dart';
 import 'package:myfinnapp/app/utils/InputForm.dart';
+import 'package:myfinnapp/app/utils/InputFormCurrency.dart';
 import 'package:myfinnapp/app/utils/InputFormNumber.dart';
 import 'package:myfinnapp/app/utils/SvgIcon.dart';
 
@@ -81,7 +82,7 @@ class CreateTrxView extends GetView<CreateTrxController> {
             SizedBox(height: 15),
 
             ///Input Amount
-            InputFormNumber(
+            InputFormCurrency(
                 Title: "Amount",
                 HintText: "Input amount",
                 Controller: controller.AmountC),
@@ -128,7 +129,7 @@ Widget _customDropDownPrograms(BuildContext context, BankAccount item) {
       child: (item == null)
           ? const ListTile(
               contentPadding: EdgeInsets.all(0),
-              title: Text("Search Programs",
+              title: Text("Search Bank Account",
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       fontSize: 13, color: Color.fromARGB(235, 158, 158, 158))),

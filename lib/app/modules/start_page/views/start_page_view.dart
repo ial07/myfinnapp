@@ -11,59 +11,42 @@ class StartPageView extends GetView<StartPageController> {
   final _controller = PageController();
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: Column(children: [
         SizedBox(height: MediaQuery.of(context).size.height * 0.1),
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.7,
-          width: MediaQuery.of(context).size.width,
+          height: size.height * 0.7,
+          width: size.width,
           child: PageView(
             controller: _controller,
             children: [
-              Scaffold(
-                backgroundColor: Colors.transparent,
-                body: Padding(
-                  padding: EdgeInsets.all(40),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      color: Colors.blue[300],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/1.png"),
                     ),
                   ),
                 ),
               ),
-              Scaffold(
-                backgroundColor: Colors.transparent,
-                body: Padding(
-                  padding: EdgeInsets.all(40),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      color: Colors.blue[300],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/2.png"),
                     ),
                   ),
                 ),
               ),
-              Scaffold(
-                backgroundColor: Colors.transparent,
-                body: Padding(
-                  padding: EdgeInsets.all(40),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      color: Colors.blue[300],
-                    ),
-                  ),
-                ),
-              ),
-              Scaffold(
-                backgroundColor: Colors.transparent,
-                body: Padding(
-                  padding: EdgeInsets.all(40),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      color: Colors.blue[300],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/3.png"),
                     ),
                   ),
                 ),
@@ -71,11 +54,12 @@ class StartPageView extends GetView<StartPageController> {
             ],
           ),
         ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
         SmoothPageIndicator(
           controller: _controller,
-          count: 4,
+          count: 3,
           effect: SwapEffect(
-            activeDotColor: Colors.blue.shade300,
+            activeDotColor: Colors.blue.shade200,
             dotColor: Colors.blue.shade100,
             dotHeight: 10,
             dotWidth: 20,
@@ -84,7 +68,7 @@ class StartPageView extends GetView<StartPageController> {
         ),
 
         //Button Row
-        SizedBox(height: 35),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.03),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

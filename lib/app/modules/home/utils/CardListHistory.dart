@@ -22,7 +22,7 @@ class CardListHistory extends StatelessWidget {
       padding: const EdgeInsets.all(5),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.6,
-        height: MediaQuery.of(context).size.height * 0.15,
+        height: MediaQuery.of(context).size.height * 0.12,
         decoration: BoxDecoration(
           color: Colors.blue[50],
           borderRadius: BorderRadius.circular(10),

@@ -12,9 +12,14 @@ class StatisticController extends GetxController {
   var listTransactionByAccountId = {}.obs;
   var getWeekTransactions = [].obs;
   List<double> getWeekTotal = List<double>().obs;
+  RxDouble getWeekEstimated = 0.0.obs;
+  RxDouble getMonthEstimated = 0.0.obs;
   List<double> getMonthTotal = List<double>().obs;
   List<double> getNormalizeWeekTransactions = List<double>().obs;
+  RxDouble getWeekNormalizeEstimated = 0.0.obs;
+  RxDouble getNormalizeWeekEstimated = 0.0.obs;
   List<double> getNormalizeMonthTransactions = List<double>().obs;
+  RxDouble getMonthNormalizeEstimated = 0.0.obs;
   var getMonthTransactions = [].obs;
 
   var firstweekinMonth =
@@ -248,6 +253,14 @@ class StatisticController extends GetxController {
     }
   }
 
+  void getWeekEstimatedList() {
+    var data = listTransactionByAccountId;
+    var weekLengthInMonth = lastWeekinMonth - firstweekinMonth;
+    getWeekEstimated.value = 0.0;
+    if (data != null)
+      getWeekEstimated.value = double.parse(data["WeekEstimate"].toString());
+  }
+
   void getListTransactionOfWeek() {
     getNormalizeWeekTransactions = [];
     var data = listTransactionByAccountId["Week"]
@@ -261,10 +274,13 @@ class StatisticController extends GetxController {
 
   void getNormalisasiTransactionOfWeek() {
     getNormalizeWeekTransactions = [];
+    getWeekNormalizeEstimated.value = 0.0;
     var data =
         listTransactionByAccountId["WeekTotalNormalize"]["${getMonth()} $year"];
     var weekLengthInMonth = lastWeekinMonth - firstweekinMonth;
-    if (data != null) {
+    if (data["${getMonth()} $year estimate"] != null) {
+      getWeekNormalizeEstimated.value =
+          double.parse(data["${getMonth()} $year estimate"].toString());
       for (var i = 1; i < weekLengthInMonth + 2; i++) {
         if (data["week $i ${getMonth()} $year"] != null) {
           getNormalizeWeekTransactions.add(
@@ -289,6 +305,13 @@ class StatisticController extends GetxController {
     }
   }
 
+  void getMonthEstimatedList() {
+    var data = listTransactionByAccountId;
+    getMonthEstimated.value = 0.0;
+    if (data != null)
+      getMonthEstimated.value = double.parse(data["MonthEstimate"].toString());
+  }
+
   void getListTransactionOfMonth() {
     getNormalizeMonthTransactions = [];
     var data = listTransactionByAccountId["Month"]
@@ -302,8 +325,11 @@ class StatisticController extends GetxController {
 
   void getNormalisasiTransactionOfMonth() {
     getNormalizeMonthTransactions = [];
+    getMonthNormalizeEstimated.value = 0.0;
     var data = listTransactionByAccountId["MonthTotalNormalize"]["$year"];
-    if (data != null) {
+    if (data["month $year estimate"] != null) {
+      getMonthNormalizeEstimated.value =
+          double.parse(data["month $year estimate"].toString());
       for (var i = 0; i < 12; i++) {
         if (data["${fullMonthName(i)} $year"] != null) {
           getNormalizeMonthTransactions
@@ -333,19 +359,17 @@ class StatisticController extends GetxController {
 
   @override
   void onInit() {
-    getNormalizeWeekTransactions = [];
-    getNormalizeMonthTransactions = [];
     listTransactionByAccountId = Get.arguments;
     initialWeek();
     initialMonth();
     getListTransactionOfWeek();
     getWeekTotalList();
+    getWeekEstimatedList();
     getListTransactionOfMonth();
     getMonthTotalList();
+    getMonthEstimatedList();
     getNormalisasiTransactionOfWeek();
     getNormalisasiTransactionOfMonth();
-    // dataChartWeekly();
-    // dataChartMonthly();
     super.onInit();
   }
 
@@ -353,6 +377,7 @@ class StatisticController extends GetxController {
   void dispose() {
     getNormalizeMonthTransactions;
     getNormalizeWeekTransactions;
+    getNormalizeWeekEstimated.value;
     super.dispose();
   }
 }
