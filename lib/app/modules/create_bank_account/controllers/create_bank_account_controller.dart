@@ -9,11 +9,13 @@ import 'package:myfinnapp/app/modules/create_bank_account/models/createAccount.d
 import 'package:myfinnapp/app/modules/create_bank_account/models/createBankAccount.dart';
 import 'package:myfinnapp/app/modules/create_bank_account/models/getAccount.dart';
 import 'package:myfinnapp/app/modules/create_bank_account/models/getBank.dart';
+import 'package:myfinnapp/app/modules/home/controllers/home_controller.dart';
 import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/service/network_handler.dart';
 import 'package:myfinnapp/app/function/sessionHandlerFunction.dart';
 
 class CreateBankAccountController extends GetxController {
+  final GlobalKey<FormState> accountFormKey = GlobalKey<FormState>();
   RxBool isLoading = false.obs;
   RxBool isLoadingAccount = false.obs;
   RxBool isDebit = false.obs;
@@ -41,6 +43,11 @@ class CreateBankAccountController extends GetxController {
   }
 
   Future<void> addAccount() async {
+    final isValid = accountFormKey.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    accountFormKey.currentState.save();
     if (accountNameC.text.isNotEmpty) {
       isLoadingAccount.value = true;
       CreateAccountModel accountModel =
@@ -63,6 +70,12 @@ class CreateBankAccountController extends GetxController {
   }
 
   Future<void> SubmitBank() async {
+    final isValid = accountFormKey.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    accountFormKey.currentState.save();
+
     final dataUser = GetStorage();
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
@@ -93,11 +106,10 @@ class CreateBankAccountController extends GetxController {
           createBankAccountModelToJson(accountBankModel), "createbankAccount");
       print(createBankAccountModelToJson(accountBankModel));
       var data = json.decode(response);
-      print(data);
       if (data["meta"]["code"] == 200) {
         isLoading.value = false;
-
         Get.offAllNamed(Routes.HOME);
+
         SnackbarFunction.snackBarSuccess(data["meta"]["message"]);
         accountNameC.text = '';
         AmountC.text = '';
@@ -110,7 +122,7 @@ class CreateBankAccountController extends GetxController {
       // // Create UserAccount Success
     } else {
       isLoading.value = false;
-      SnackbarFunction.snackBarError("Please filled all fields");
+      // SnackbarFunction.snackBarError("Please filled all fields");
     }
   }
 

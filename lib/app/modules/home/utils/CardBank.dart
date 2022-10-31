@@ -40,13 +40,14 @@ class CardBank extends StatelessWidget {
     var f = NumberFormat("#,##0.00", "en_US");
 
     var staticC = Get.put(HomeController());
+    final size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.all(5),
       child: Column(
         children: [
           Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.21,
+            width: size.width,
+            height: size.height > 670 ? size.height * 0.21 : size.height * 0.24,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -98,7 +99,11 @@ class CardBank extends StatelessWidget {
                                         "Rp ${f.format(int.parse(Amount) - TotalMonthExpenses)}",
                                         style: GoogleFonts.montserrat(
                                             fontSize: 13,
-                                            color: Colors.white,
+                                            color: int.parse(Amount) -
+                                                        TotalMonthExpenses >
+                                                    0
+                                                ? Colors.white
+                                                : Colors.red.shade600,
                                             fontWeight: FontWeight.bold)),
                                   ],
                                 )

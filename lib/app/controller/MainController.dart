@@ -22,7 +22,7 @@ class MainController extends GetxController {
         );
         break;
       case 2:
-        Get.offAllNamed(Routes.PROFILE_PAGE);
+        Get.toNamed(Routes.PROFILE_PAGE);
         break;
       // case 3:
       //   Get.offAllNamed(Routes.HOME);
@@ -31,7 +31,7 @@ class MainController extends GetxController {
       //   Get.offAllNamed(Routes.HOME);
       //   break;
       default:
-        Get.offAllNamed(Routes.HOME);
+        Get.toNamed(Routes.HOME);
     }
   }
 }

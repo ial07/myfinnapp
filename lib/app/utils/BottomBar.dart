@@ -14,8 +14,8 @@ class BottomBar extends StatelessWidget {
       color: Colors.blue[600],
       backgroundColor: Colors.white,
       activeColor: Colors.blue[300],
-      height: MediaQuery.of(context).size.height * 0.07,
 
+      height: MediaQuery.of(context).size.height * 0.07,
       items: [
         TabItem(icon: Icons.home),
         // TabItem(icon: Icons.list_alt),

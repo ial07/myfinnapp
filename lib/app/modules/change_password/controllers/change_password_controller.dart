@@ -22,7 +22,9 @@ class ChangePasswordController extends GetxController {
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
 
-    if (newPassC.text == confirmNewPassC.text) {
+    if (newPassC.text == confirmNewPassC.text &&
+        newPassC.text.isNotEmpty &&
+        newPassC.text.length >= 6) {
       isLoading.value = true;
       ChangePassModel changePassModel = ChangePassModel(
           id: idUser, passwordnew: newPassC.text, passwordold: oldPassC.text);
@@ -36,13 +38,15 @@ class ChangePasswordController extends GetxController {
         SnackbarFunction.snackBarSuccess("Success change your password");
       } else {
         isLoading.value = false;
-        var errors = data["data"]["errors"];
-        SnackbarFunction.snackBarError("$errors");
+        var errors = data["data"]["errors"][0];
+        print(errors);
+        SnackbarFunction.snackBarError(
+            "Please enter your correct old password");
       }
     } else {
       isLoading.value = false;
       SnackbarFunction.snackBarError(
-          "Confirm password must be the same as the password");
+          "Confirm password must be the same as the password and at least 6 characters");
     }
   }
 }

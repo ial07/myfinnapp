@@ -23,101 +23,125 @@ class CreateTrxView extends GetView<CreateTrxController> {
     return Padding(
       padding: const EdgeInsets.only(right: 20, left: 20, bottom: 10),
       child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            //icon swipe
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.keyboard_double_arrow_down_outlined,
-                  size: 25,
-                  color: Colors.blue[600],
-                ),
-              ],
-            ),
-            SizedBox(height: 25),
+        child: Form(
+          key: controller.trxFormKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              //icon swipe
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.keyboard_double_arrow_down_outlined,
+                    size: 25,
+                    color: Colors.blue[600],
+                  ),
+                ],
+              ),
+              SizedBox(height: 25),
 
-            /// Title login
-            Text(
-              "CREATE TRANSACTION",
-              style: GoogleFonts.montserrat(
-                  fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: size.height * 0.02),
+              /// Title login
+              Text(
+                "CREATE TRANSACTION",
+                style: GoogleFonts.montserrat(
+                    fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: size.height * 0.02),
 
-            // Dropdown Account
-            Obx(() => controller.getAccountBankList.isNotEmpty
-                ? DropdownSearch<BankAccount>(
-                    showSearchBox: true,
-                    dropdownSearchDecoration:
-                        InputDecoration(labelText: "Bank Account Name"),
-                    mode: Mode.BOTTOM_SHEET,
-                    onChanged: (value) =>
-                        controller.idBankAccount.value = value?.id,
-                    dropdownBuilder: _customDropDownPrograms,
-                    popupItemBuilder: _customPopupItemBuilder,
-                    onFind: (text) async {
-                      var res = await controller.getAccountBankList;
-                      if (res.length > 0) {
-                        List<BankAccount> allAccountName = [];
-                        res.forEach((element) {
-                          allAccountName.add(BankAccount(
-                            id: element.id,
-                            userAccount: element.userAccount,
-                            bank: element.bank,
-                            notes: element.notes,
-                            isDebit: element.isDebit,
-                          ));
-                        });
-                        return allAccountName;
-                      } else {
-                        return [];
-                      }
-                    },
-                    dropdownSearchBaseStyle: GoogleFonts.montserrat(),
-                  )
-                : Center(child: CircularProgressIndicator())),
-            SizedBox(height: 15),
+              // Dropdown Account
+              Obx(() => controller.getAccountBankList.isNotEmpty
+                  ? DropdownSearch<BankAccount>(
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'please choose bank account';
+                        }
+                        return null;
+                      },
+                      showSearchBox: true,
+                      dropdownSearchDecoration:
+                          InputDecoration(labelText: "Bank Account Name"),
+                      mode: Mode.BOTTOM_SHEET,
+                      onChanged: (value) =>
+                          controller.idBankAccount.value = value?.id,
+                      dropdownBuilder: _customDropDownPrograms,
+                      popupItemBuilder: _customPopupItemBuilder,
+                      onFind: (text) async {
+                        var res = await controller.getAccountBankList;
+                        if (res.length > 0) {
+                          List<BankAccount> allAccountName = [];
+                          res.forEach((element) {
+                            allAccountName.add(BankAccount(
+                              id: element.id,
+                              userAccount: element.userAccount,
+                              bank: element.bank,
+                              notes: element.notes,
+                              isDebit: element.isDebit,
+                            ));
+                          });
+                          return allAccountName;
+                        } else {
+                          return [];
+                        }
+                      },
+                      dropdownSearchBaseStyle: GoogleFonts.montserrat(),
+                    )
+                  : Center(child: CircularProgressIndicator())),
+              SizedBox(height: 15),
 
-            ///Input Amount
-            InputFormCurrency(
+              ///Input Amount
+              InputFormCurrency(
                 Title: "Amount",
                 HintText: "Input amount",
-                Controller: controller.AmountC),
+                Controller: controller.AmountC,
+                ControllerValidator: (value) {
+                  if (value == "Rp. 0" || value == "") {
+                    return 'please input amount';
+                  }
+                  return null;
+                },
+              ),
 
-            //Input Notes
-            InputForm(
+              //Input Notes
+              InputForm(
                 Title: "Notes",
                 HintText: "Enter notes",
-                Controller: controller.NotesC),
-            SizedBox(height: 20),
+                Controller: controller.NotesC,
+                ControllerValidator: (value) {
+                  if (value.length <= 0) {
+                    return 'please enter notes';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
 
-            ///Button
-            Obx(() => SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (controller.isLoading.isFalse) {
-                        await controller.SubmitTransaction();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                        primary: Colors.blue[600],
-                        padding: EdgeInsets.all(15),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            side: BorderSide(
-                                color: Color.fromRGBO(0, 160, 227, 1)))),
-                    child: Text(
-                      controller.isLoading.isFalse ? "SUBMIT" : "LOADING...",
-                      style:
-                          GoogleFonts.montserrat(fontWeight: FontWeight.bold),
+              ///Button
+              Obx(() => SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (controller.isLoading.isFalse) {
+                          await controller.SubmitTransaction();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.blue[600],
+                          padding: EdgeInsets.all(15),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(
+                                  color: Color.fromRGBO(0, 160, 227, 1)))),
+                      child: Text(
+                        controller.isLoading.isFalse ? "SUBMIT" : "LOADING...",
+                        style:
+                            GoogleFonts.montserrat(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                )),
-          ],
+                  )),
+            ],
+          ),
         ),
       ),
     );

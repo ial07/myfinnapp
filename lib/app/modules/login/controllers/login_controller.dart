@@ -10,6 +10,7 @@ import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/service/network_handler.dart';
 
 class LoginController extends GetxController {
+  final GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
   RxBool isLoading = false.obs;
   RxInt idUser = 0.obs;
 
@@ -17,6 +18,11 @@ class LoginController extends GetxController {
   TextEditingController passwordC = TextEditingController();
 
   Future<void> login() async {
+    final isValid = loginFormKey.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    loginFormKey.currentState.save();
     if (usernameC.text.isNotEmpty && passwordC.text.isNotEmpty) {
       isLoading.value = true;
       LoginModel loginModel =
@@ -64,7 +70,7 @@ class LoginController extends GetxController {
       }
     } else {
       isLoading.value = false;
-      SnackbarFunction.snackBarError("All fields must be filled");
+      // SnackbarFunction.snackBarError("All fields must be filled");
     }
   }
 }

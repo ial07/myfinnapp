@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,7 +27,8 @@ class HomeView extends GetView<HomeController> {
             SliverAppBar(
               pinned: true,
               backgroundColor: color.AppColor.PageBackground,
-              expandedHeight: size.height * 0.5,
+              expandedHeight:
+                  size.height > 670 ? size.height * 0.5 : size.height * 0.55,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
                   padding: EdgeInsets.only(top: size.height * 0.05, right: 10),
@@ -39,17 +42,23 @@ class HomeView extends GetView<HomeController> {
                               width: 50,
                               child: Image.asset('assets/logo.png')),
                           Center(
-                            child: CircleAvatar(
-                              radius: 20,
-                              backgroundColor: Colors.blue[300],
-                              child: Obx(() => CircleAvatar(
-                                  radius: 17,
-                                  backgroundImage: NetworkImage(controller
-                                          .UserDatas.isNotEmpty
-                                      ? controller.UserDatas[0].photo.isNotEmpty
-                                          ? controller.UserDatas[0].photo
-                                          : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=${controller.UserDatas[0].email}"
-                                      : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=F"))),
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.toNamed(Routes.PROFILE_PAGE);
+                              },
+                              child: CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Colors.blue[300],
+                                child: Obx(() => CircleAvatar(
+                                    radius: 17,
+                                    backgroundImage: NetworkImage(controller
+                                            .UserDatas.isNotEmpty
+                                        ? controller
+                                                .UserDatas[0].photo.isNotEmpty
+                                            ? controller.UserDatas[0].photo
+                                            : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=${controller.UserDatas[0].email}"
+                                        : "https://ui-avatars.com/api/?bold=true&background=1E88E&color=fff&name=F"))),
+                              ),
                             ),
                           ),
                         ],
@@ -240,16 +249,15 @@ class HomeView extends GetView<HomeController> {
                                   height: size.height * 0.3,
                                   child: PageView.builder(
                                       controller: _controller,
-                                      // onPageChanged: (val) =>
-                                      //     controller.getResponse(),
+                                      onPageChanged: (val) {
+                                        controller.getTransaction();
+                                        controller.getExpenseMonth();
+                                      },
                                       scrollDirection: Axis.horizontal,
                                       itemCount: controller.getBankList.length,
                                       itemBuilder: (context, index) {
                                         controller.idBankAccount.value =
                                             controller.getBankList[index].id;
-
-                                        controller.getTransaction();
-                                        controller.getExpenseMonth();
                                         var colors = controller
                                             .getBankList[index].bank.color;
                                         var colorresult;
@@ -291,6 +299,7 @@ class HomeView extends GetView<HomeController> {
                                 ),
                               ),
                       ),
+
                       Obx(() => controller.getBankList.isNotEmpty
                           ? SmoothPageIndicator(
                               controller: _controller,
@@ -322,19 +331,20 @@ class HomeView extends GetView<HomeController> {
 
             // / list Transaction
 
-            Obx(
-              () => controller.getTransactionsList.isNotEmpty
+            Obx(() {
+              return controller.getTransactionsList.isNotEmpty
                   ? SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
                       return CardListHistory(
-                        // Title: "Notes",
-                        SubTitle: controller.getTransactionsList[index].notes,
-                        Price: controller.getTransactionsList[index].amount
-                            .toString(),
-                        Date: controller.getTransactionsList[index].createdDate,
-                        isDebit: controller
-                            .getTransactionsList[index].bankAccount.isDebit,
-                      );
+                          // Title: "Notes",
+                          SubTitle: controller.getTransactionsList[index]
+                              ["Notes"],
+                          Price: controller.getTransactionsList[index]["Amount"]
+                              .toString(),
+                          Date: DateTime.parse(controller
+                              .getTransactionsList[index]["CreatedDate"]),
+                          isDebit: controller.getTransactionsList[index]
+                              ["BankAccount"]["IsDebit"]);
                     }, childCount: controller.getTransactionsList.length))
                   : SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
@@ -344,8 +354,8 @@ class HomeView extends GetView<HomeController> {
                             child: Text("Transaction Not Found",
                                 style: GoogleFonts.montserrat())),
                       );
-                    }, childCount: 1)),
-            )
+                    }, childCount: 1));
+            })
           ],
         ),
       ),

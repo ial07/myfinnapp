@@ -9,6 +9,7 @@ import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/service/network_handler.dart';
 
 class RegisterController extends GetxController {
+  final GlobalKey<FormState> registerKeyForm = GlobalKey<FormState>();
   RxBool isLoading = false.obs;
   RxBool isVisible = false.obs;
   RxBool isConfirmVisible = false.obs;
@@ -20,12 +21,18 @@ class RegisterController extends GetxController {
   TextEditingController confirmPassC = TextEditingController();
 
   Future<void> processRegister() async {
+    final isValid = registerKeyForm.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    registerKeyForm.currentState.save();
+
     if (emailC.text.isNotEmpty &&
         passC.text.isNotEmpty &&
         nameC.text.isNotEmpty &&
         nohpC.text.isNotEmpty) {
+      isLoading.value = true;
       if (emailC.text.isEmail) {
-        isLoading.value = true;
         if (confirmPassC.text == passC.text) {
           RegisterModel registerModel = RegisterModel(
               username: nameC.text,
@@ -37,9 +44,8 @@ class RegisterController extends GetxController {
               registerModelToJson(registerModel), "register");
 
           var data = json.decode(response);
-          print(data);
           if (data["data"]["token"] != null) {
-            Get.offAllNamed(Routes.LOGIN);
+            Get.offAllNamed(Routes.START_PAGE);
             SnackbarFunction.snackBarSuccess(
                 "Your is registered, please verified your account first");
           } else {
@@ -58,7 +64,7 @@ class RegisterController extends GetxController {
       }
     } else {
       isLoading.value = false;
-      SnackbarFunction.snackBarError("All fields must be filled");
+      // SnackbarFunction.snackBarError("All fields must be filled");
     }
   }
 }

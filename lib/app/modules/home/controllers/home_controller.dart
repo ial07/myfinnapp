@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_launcher_icons/utils.dart';
@@ -25,61 +26,50 @@ class HomeController extends GetxController {
   var getBankList = <BankAccount>[].obs;
   var listTransactionByAccountId = {}.obs;
 
-  var getTransactionsList = <Transaction>[].obs;
-  // var getTransactionsList = [].obs;
+  // var getTransactionsList = <Transaction>[].obs;
+  var getTransactionsList = [].obs;
   var getTransactionsListTemp = [].obs;
 
   dynamic response = null.obs;
 
   @override
   void onInit() {
-    listTransactionByAccountId.value = {};
-    // getResponse();
-    getAccountBank();
-    getUser();
+    // listTransactionByAccountId.value = {};
+    getResponse().then((value) {
+      getAccountBank().then((value) {
+        getUser().then((value) {
+          getTransaction();
+          getExpenseMonth();
+        });
+      });
+    });
     super.onInit();
   }
 
   @override
   void onReady() {
+    super.onReady();
     getTransaction();
     getExpenseMonth();
-    super.onReady();
   }
 
-  // void getTransaction() async {
-  //   getTransactionsList.value = [];
-  //   if (getTransactionsListTemp.isNotEmpty) {
-  //     for (var i = 0; i < getTransactionsListTemp.length; i++) {
-  //       var data = getTransactionsListTemp[i]["BankAccount"];
-  //       if (data != null) {
-  //         if (data["Id"] == idBankAccount.value) {
-  //           getTransactionsList.value = data["Transactions"];
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  void getTransaction() {
+    // getTransactionsList.value = [];
+    if (getTransactionsListTemp.isNotEmpty) {
+      for (var i = 0; i < getTransactionsListTemp.length; i++) {
+        var data = getTransactionsListTemp[i]["BankAccount"];
+        if (data != null) {
+          if (data["Id"] == idBankAccount.value) {
+            TotalMonthdDebit.value = double.parse(
+                getTransactionsListTemp[i]["TransactionTotal"].toString());
+            getTransactionsList.value = data["Transactions"];
+          }
+        }
+      }
+    }
+  }
 
-  // void getResponse() async {
-  //   isLoading.value = false;
-  //   Map<String, dynamic> data = dataUser.read("dataUser");
-  //   final idUser = data["profile"]["Id"];
-  //   var res =
-  //       await NetworkHandler.get("getbankAccountbyaccountidowner/$idUser");
-  //   if (res.toString().contains('Session End')) {
-  //     sessionHandlerFunction.ExpiredTokenRetryPolicy();
-  //   } else {
-  //     var data = jsonDecode(res);
-  //     if (data["data"].length > 0) {
-  //       getTransactionsListTemp.addAll(data["data"]);
-  //     }
-  //     // getTransaction();
-  //   }
-  // }
-
-  void getTransaction() async {
-    listTransactionByAccountId.value = {};
+  Future<void> getResponse() async {
     isLoading.value = false;
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
@@ -88,35 +78,53 @@ class HomeController extends GetxController {
     if (res.toString().contains('Session End')) {
       sessionHandlerFunction.ExpiredTokenRetryPolicy();
     } else {
-      AccountBankList _getAcoountBankListModel =
-          AccountBankList.fromJson(jsonDecode(res));
-      var items = _getAcoountBankListModel.data
-          .where((e) => e.bankAccount.id == idBankAccount.value);
-      getTransactionsList.removeRange(0, getTransactionsList.length);
-
-      if (items.isNotEmpty) {
-        TotalMonthdDebit.value =
-            double.parse(items.first.transactionTotal.toString());
-        for (var item in items.first.bankAccount.transactions) {
-          getTransactionsList.add(Transaction(
-              id: item.id,
-              amount: item.amount,
-              bankAccount: item.bankAccount,
-              bankAccountId: item.bankAccountId,
-              createdBy: item.createdBy,
-              createdDate: item.createdDate,
-              deletedBy: item.deletedBy,
-              deletedDate: item.deletedDate,
-              notes: item.notes,
-              updatedBy: item.updatedBy,
-              updatedDate: item.updatedDate));
-        }
+      var data = jsonDecode(res);
+      if (data["data"].length > 0) {
+        getTransactionsListTemp.addAll(data["data"]);
       }
-      update();
+      // getTransaction();
     }
   }
 
-  void getAccountBank() async {
+  // void getTransaction() async {
+  //   // listTransactionByAccountId.value = {};
+  //   isLoading.value = false;
+  //   Map<String, dynamic> data = dataUser.read("dataUser");
+  //   final idUser = data["profile"]["Id"];
+  //   var res =
+  //       await NetworkHandler.get("getbankAccountbyaccountidowner/$idUser");
+  //   if (res.toString().contains('Session End')) {
+  //     sessionHandlerFunction.ExpiredTokenRetryPolicy();
+  //   } else {
+  //     AccountBankList _getAcoountBankListModel =
+  //         AccountBankList.fromJson(jsonDecode(res));
+  //     var items = _getAcoountBankListModel.data
+  //         .where((e) => e.bankAccount.id == idBankAccount.value);
+  //     getTransactionsList.removeRange(0, getTransactionsList.length);
+
+  //     if (items.isNotEmpty) {
+  //       TotalMonthdDebit.value =
+  //           double.parse(items.first.transactionTotal.toString());
+  //       for (var item in items.first.bankAccount.transactions) {
+  //         getTransactionsList.add(Transaction(
+  //             id: item.id,
+  //             amount: item.amount,
+  //             bankAccount: item.bankAccount,
+  //             bankAccountId: item.bankAccountId,
+  //             createdBy: item.createdBy,
+  //             createdDate: item.createdDate,
+  //             deletedBy: item.deletedBy,
+  //             deletedDate: item.deletedDate,
+  //             notes: item.notes,
+  //             updatedBy: item.updatedBy,
+  //             updatedDate: item.updatedDate));
+  //       }
+  //     }
+  //     update();
+  //   }
+  // }
+
+  Future<void> getAccountBank() async {
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
     var res =
@@ -220,7 +228,7 @@ class HomeController extends GetxController {
   void getExpenseMonth() async {
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
-    getMonthEstimated.value = 0.0;
+    // getMonthEstimated.value = 0.0;
     if (idBankAccount.value != 0) {
       var response = await NetworkHandler.get(
           "gettransactionbybankaccountid/${idBankAccount.value}");
@@ -243,7 +251,7 @@ class HomeController extends GetxController {
     }
   }
 
-  void getUser() async {
+  Future<void> getUser() async {
     Map<String, dynamic> data = dataUser.read("dataUser");
     idUser.value = data["profile"]["Id"];
     var response = await NetworkHandler.get("getuserbyid/$idUser");

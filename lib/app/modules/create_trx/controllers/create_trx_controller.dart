@@ -6,10 +6,12 @@ import 'package:get_storage/get_storage.dart';
 import 'package:myfinnapp/app/function/SnackbarFunction.dart';
 import 'package:myfinnapp/app/models/AccountBankList.dart';
 import 'package:myfinnapp/app/modules/create_trx/models/create_trx.dart';
+import 'package:myfinnapp/app/modules/home/controllers/home_controller.dart';
 import 'package:myfinnapp/app/routes/app_pages.dart';
 import 'package:myfinnapp/service/network_handler.dart';
 
 class CreateTrxController extends GetxController {
+  final GlobalKey<FormState> trxFormKey = GlobalKey<FormState>();
   final dataUser = GetStorage();
   RxBool isLoading = false.obs;
 
@@ -22,6 +24,12 @@ class CreateTrxController extends GetxController {
   TextEditingController NotesC = TextEditingController();
 
   Future<void> SubmitTransaction() async {
+    final isValid = trxFormKey.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    trxFormKey.currentState.save();
+
     final dataUser = GetStorage();
     Map<String, dynamic> data = dataUser.read("dataUser");
     final idUser = data["profile"]["Id"];
@@ -41,7 +49,7 @@ class CreateTrxController extends GetxController {
       var data = json.decode(response);
       if (data["meta"]["code"] == 200) {
         isLoading.value = false;
-
+        Get.delete<HomeController>();
         Get.offAndToNamed(Routes.HOME);
         SnackbarFunction.snackBarSuccess(data["meta"]["message"]);
         idBankAccount.value = 0;
@@ -50,7 +58,7 @@ class CreateTrxController extends GetxController {
       }
     } else {
       isLoading.value = false;
-      SnackbarFunction.snackBarError("Please filled all fields");
+      // SnackbarFunction.snackBarError("Please filled all fields");
     }
   }
 

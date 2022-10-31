@@ -18,6 +18,7 @@ class StatisticView extends GetView<StatisticController> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    print(size.height);
     return Scaffold(
       backgroundColor: color.AppColor.PageBackground,
       body: Padding(
@@ -30,7 +31,8 @@ class StatisticView extends GetView<StatisticController> {
             SliverAppBar(
               automaticallyImplyLeading: false,
               pinned: true,
-              expandedHeight: size.height * 0.62,
+              expandedHeight:
+                  size.height > 670 ? size.height * 0.62 : size.height * 0.72,
               backgroundColor: color.AppColor.PageBackground,
               flexibleSpace: FlexibleSpaceBar(
                 background: Padding(
