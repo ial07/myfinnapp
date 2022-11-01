@@ -360,6 +360,8 @@ class StaticCreditController extends GetxController {
     getMonthTotalList();
     getNormalisasiTransactionOfWeek();
     getNormalisasiTransactionOfMonth();
+    print(getNormalizeWeekTransactions);
+    print(weeks);
     dataChartWeekly();
     dataChartMonthly();
     super.onInit();

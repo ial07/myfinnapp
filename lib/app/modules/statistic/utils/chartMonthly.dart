@@ -58,6 +58,8 @@ BarChartData barChartMonthlys() {
     TopText = (largestMonth / 1000000).toInt().toString() + "M";
   } else if (count > 3) {
     TopText = (largestMonth / 1000).toInt().toString() + "K";
+  } else {
+    TopText = "Rp. " + (largestMonth).toInt().toString();
   }
 
   if (count2 > 9) {
@@ -66,6 +68,8 @@ BarChartData barChartMonthlys() {
     MidText = (middleWeek / 1000000).toInt().toString() + "M";
   } else if (count2 > 3) {
     MidText = (middleWeek / 1000).toInt().toString() + "K";
+  } else {
+    MidText = "Rp. " + (middleWeek).toInt().toString();
   }
 
   if (count3 > 9) {
@@ -74,6 +78,8 @@ BarChartData barChartMonthlys() {
     BotText = (botWeek / 1000000).toInt().toString() + "M";
   } else if (count3 > 3) {
     BotText = (botWeek / 1000).toInt().toString() + "K";
+  } else {
+    BotText = "Rp. " + (botWeek).toInt().toString();
   }
 
   return BarChartData(

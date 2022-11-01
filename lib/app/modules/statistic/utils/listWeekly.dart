@@ -26,7 +26,7 @@ class ListWeekly extends StatelessWidget {
               controller.getListTransactionOfWeek();
             },
             child: Container(
-              width: (size.width - 40) / 6,
+              width: (size.width - 40) / staticC.weeks.length,
               child: Obx(
                 () => staticC.weeks.isNotEmpty
                     ? Column(

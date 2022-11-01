@@ -15,7 +15,6 @@ class ListWeekly extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var staticC = Get.put(StaticCreditController());
-
     return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: List.generate(staticC.weeks.length, (index) {
@@ -25,7 +24,7 @@ class ListWeekly extends StatelessWidget {
               controller.getListTransactionOfWeek();
             },
             child: Container(
-              width: (size.width - 40) / 6,
+              width: (size.width - 40) / staticC.weeks.length,
               child: Obx(
                 () => staticC.weeks.isNotEmpty
                     ? Column(

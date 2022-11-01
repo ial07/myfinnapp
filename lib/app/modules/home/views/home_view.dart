@@ -342,9 +342,7 @@ class HomeView extends GetView<HomeController> {
                           Price: controller.getTransactionsList[index]["Amount"]
                               .toString(),
                           Date: DateTime.parse(controller
-                              .getTransactionsList[index]["CreatedDate"]),
-                          isDebit: controller.getTransactionsList[index]
-                              ["BankAccount"]["IsDebit"]);
+                              .getTransactionsList[index]["CreatedDate"]));
                     }, childCount: controller.getTransactionsList.length))
                   : SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {

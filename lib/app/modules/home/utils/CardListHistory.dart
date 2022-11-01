@@ -10,10 +10,8 @@ class CardListHistory extends StatelessWidget {
   final String SubTitle;
   final String Price;
   final DateTime Date;
-  final bool isDebit;
 
-  CardListHistory(
-      {this.Title, this.SubTitle, this.Price, this.Date, this.isDebit});
+  CardListHistory({this.Title, this.SubTitle, this.Price, this.Date});
 
   @override
   Widget build(BuildContext context) {

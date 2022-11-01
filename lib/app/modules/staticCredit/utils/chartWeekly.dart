@@ -51,6 +51,8 @@ LineChartData mainDataWeekly() {
     TopText = (largestWeek / 1000000).toInt().toString() + "M";
   } else if (count > 3) {
     TopText = (largestWeek / 1000).toInt().toString() + "K";
+  } else {
+    TopText = "Rp. " + (largestWeek).toInt().toString();
   }
 
   if (count2 > 9) {
@@ -59,6 +61,8 @@ LineChartData mainDataWeekly() {
     MidText = (middleWeek / 1000000).toInt().toString() + "M";
   } else if (count2 > 3) {
     MidText = (middleWeek / 1000).toInt().toString() + "K";
+  } else {
+    MidText = "Rp. " + (middleWeek).toInt().toString();
   }
 
   if (count3 > 9) {
@@ -67,6 +71,8 @@ LineChartData mainDataWeekly() {
     BotText = (botWeek / 1000000).toInt().toString() + "M";
   } else if (count3 > 3) {
     BotText = (botWeek / 1000).toInt().toString() + "K";
+  } else {
+    BotText = "Rp. " + (botWeek).toInt().toString();
   }
 
   return LineChartData(
@@ -109,7 +115,7 @@ LineChartData mainDataWeekly() {
       show: false,
     ),
     minX: 0,
-    maxX: 8,
+    maxX: double.parse(staticC.weeks.length.toString()) + 1,
     minY: 0,
     maxY: 10,
     lineBarsData: [
