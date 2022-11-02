@@ -85,14 +85,28 @@ class ProfileEditView extends GetView<ProfileEditController> {
 
               /// Input group
               InputForm(
-                  Title: "Username",
-                  HintText: "Enter username",
-                  Controller: controller.nameC),
+                Title: "Username",
+                HintText: "Enter username",
+                Controller: controller.nameC,
+                ControllerValidator: (value) {
+                  if (value.length <= 0) {
+                    return 'please type your username';
+                  }
+                  return null;
+                },
+              ),
 
               InputFormNumber(
-                  Title: "No HP",
-                  HintText: "Enter No HP",
-                  Controller: controller.nohpC),
+                Title: "No HP",
+                HintText: "Enter No HP",
+                Controller: controller.nohpC,
+                ControllerValidator: (value) {
+                  if (value.length <= 0) {
+                    return 'please type your nohp';
+                  }
+                  return null;
+                },
+              ),
 
               // Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               //   Text("Old Password",

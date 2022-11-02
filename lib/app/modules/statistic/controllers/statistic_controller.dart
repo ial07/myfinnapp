@@ -278,16 +278,25 @@ class StatisticController extends GetxController {
     var data =
         listTransactionByAccountId["WeekTotalNormalize"]["${getMonth()} $year"];
     var weekLengthInMonth = lastWeekinMonth - firstweekinMonth;
-    if (data["${getMonth()} $year estimate"] != null) {
-      getWeekNormalizeEstimated.value =
-          double.parse(data["${getMonth()} $year estimate"].toString());
-      for (var i = 1; i < weekLengthInMonth + 2; i++) {
-        if (data["week $i ${getMonth()} $year"] != null) {
-          getNormalizeWeekTransactions.add(
-              double.parse(data["week $i ${getMonth()} $year"].toString()));
-        } else {
-          getNormalizeWeekTransactions.add(0);
+    print(listTransactionByAccountId["WeekTotalNormalize"]);
+    if (data != null) {
+      if (data["${getMonth()} $year estimate"] != null) {
+        getWeekNormalizeEstimated.value =
+            double.parse(data["${getMonth()} $year estimate"].toString());
+        for (var i = 1; i < weekLengthInMonth + 2; i++) {
+          if (data["week $i ${getMonth()} $year"] != null) {
+            getNormalizeWeekTransactions.add(
+                double.parse(data["week $i ${getMonth()} $year"].toString()));
+          } else {
+            getNormalizeWeekTransactions.add(0);
+          }
         }
+      }
+    } else {
+      getWeekNormalizeEstimated.value = 0;
+      var weekLengthInMonth = lastWeekinMonth - firstweekinMonth;
+      for (var i = 1; i < weekLengthInMonth + 2; i++) {
+        getNormalizeWeekTransactions.add(0);
       }
     }
   }
@@ -327,16 +336,24 @@ class StatisticController extends GetxController {
     getNormalizeMonthTransactions = [];
     getMonthNormalizeEstimated.value = 0.0;
     var data = listTransactionByAccountId["MonthTotalNormalize"]["$year"];
-    if (data["month $year estimate"] != null) {
-      getMonthNormalizeEstimated.value =
-          double.parse(data["month $year estimate"].toString());
-      for (var i = 0; i < 12; i++) {
-        if (data["${fullMonthName(i)} $year"] != null) {
-          getNormalizeMonthTransactions
-              .add(double.parse(data["${fullMonthName(i)} $year"].toString()));
-        } else {
-          getNormalizeMonthTransactions.add(0);
+    if (data != null) {
+      if (data["month $year estimate"] != null) {
+        getMonthNormalizeEstimated.value =
+            double.parse(data["month $year estimate"].toString());
+        for (var i = 0; i < 12; i++) {
+          if (data["${fullMonthName(i)} $year"] != null) {
+            getNormalizeMonthTransactions.add(
+                double.parse(data["${fullMonthName(i)} $year"].toString()));
+          } else {
+            getNormalizeMonthTransactions.add(0);
+          }
         }
+      }
+    } else {
+      getMonthNormalizeEstimated.value = 0;
+      var weekLengthInMonth = lastWeekinMonth - firstweekinMonth;
+      for (var i = 0; i < 12; i++) {
+        getNormalizeMonthTransactions.add(0);
       }
     }
   }

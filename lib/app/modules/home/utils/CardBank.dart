@@ -190,7 +190,7 @@ class CardBank extends StatelessWidget {
                                   fontSize: 7, color: Colors.white)),
                         ],
                       ),
-                      Obx(() => staticC.TotalMonthExpenses.value != 0
+                      Obx(() => staticC.getTransactionsList.isNotEmpty
                           ? InkWell(
                               onTap: () {
                                 isDebit

@@ -91,7 +91,7 @@ class ProfileEditController extends GetxController {
       Get.offAllNamed(Routes.PROFILE_PAGE);
     } else {
       isLoading.value = false;
-      SnackbarFunction.snackBarError("All fields must be filled");
+      // SnackbarFunction.snackBarError("All fields must be filled");
     }
   }
 }
