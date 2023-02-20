@@ -9,6 +9,7 @@ import '../controllers/register_controller.dart';
 import '../../../utils/color.dart' as color;
 import '../../../utils/InputForm.dart';
 import '../../../utils/Iconback.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class RegisterView extends GetView<RegisterController> {
   @override
@@ -80,12 +81,12 @@ class RegisterView extends GetView<RegisterController> {
                 SizedBox(height: 5),
                 Obx(() => TextFormField(
                       controller: controller.passC,
-                      validator: (value) {
-                        if (GetUtils.isLengthLessThan(value, 6)) {
-                          return 'password must be of 6 characters length';
-                        }
-                        return null;
-                      },
+                      validator: MultiValidator([
+                        RequiredValidator(
+                            errorText: "Harap masukan kata sandi anda"),
+                        MinLengthValidator(8,
+                            errorText: "kata sandi minimal 8 karakter"),
+                      ]),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       autocorrect: false,
                       obscureText: controller.isVisible.isFalse ? true : false,
@@ -118,12 +119,9 @@ class RegisterView extends GetView<RegisterController> {
                 Obx(() => TextFormField(
                       controller: controller.confirmPassC,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (value) {
-                        if (value.length <= 0) {
-                          return 'please type your confirm password';
-                        }
-                        return null;
-                      },
+                      validator: (val) => MatchValidator(
+                              errorText: 'konfirmasi kata sandi tidak sesuai')
+                          .validateMatch(val, controller.passC.text),
                       autocorrect: false,
                       obscureText:
                           controller.isConfirmVisible.isFalse ? true : false,
